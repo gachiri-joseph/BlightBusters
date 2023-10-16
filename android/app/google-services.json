@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "599344299010",
+    "project_id": "blightbusters-c3f4c",
+    "storage_bucket": "blightbusters-c3f4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:599344299010:android:a3e0da9b780b53cd02fb1b",
+        "android_client_info": {
+          "package_name": "com.blightbusters"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDGw8OwXqFmcW82jES_gfY5xdCkR_w7Cf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
