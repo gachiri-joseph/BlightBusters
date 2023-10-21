@@ -2,10 +2,10 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {COLORS} from '../../constants/theme';
 import {View} from 'react-native'
 import ProfileScreen from '../../screens/Home/ProfileScreen';
-import EditProfileScreen from '../../screens/Home/EditProfileScreen';
+
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import EditProfileScreen2 from '../../screens/Home/EditProfileScreen2';
-import EditProfileScreen3 from '../../screens/Home/EditProfileScreen3';
+
+import EditProfileScreen from '../../screens/Home/EditProfileScreen';
 const ProfileStack = createNativeStackNavigator();
 
 const ProfileStackNav = ({navigation}) => {
@@ -46,7 +46,7 @@ const ProfileStackNav = ({navigation}) => {
           
           title: 'Edit Profile',
         }}
-        component={EditProfileScreen3}
+        component={EditProfileScreen}
       />
     </ProfileStack.Navigator>
   );
