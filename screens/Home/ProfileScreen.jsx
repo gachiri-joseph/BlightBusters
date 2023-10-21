@@ -3,15 +3,13 @@ import { View, SafeAreaView, StyleSheet } from 'react-native';
 import {
   Avatar,
   Title,
-  Caption,
   Text,
-  TouchableRipple,
 } from 'react-native-paper';
 import {COLORS,SIZES} from '../../constants/theme'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import Feather from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+
 
 
 const ProfileScreen = ({navigation}) => {
@@ -21,7 +19,7 @@ const ProfileScreen = ({navigation}) => {
     <SafeAreaView style={styles.container}>
 
       <View style={styles.topUserInfoSection}>
-        <View style={{ flexDirection: 'row', marginTop: 15 ,justifyContent:'flex-start',alignItems:'center'}}>
+        <View style={{ flexDirection: 'column', marginTop: 15 ,justifyContent:'flex-start',alignItems:'center'}}>
           <Avatar.Image
             source={require('../../assets/images/135.png')}
             size={110}
@@ -30,7 +28,7 @@ const ProfileScreen = ({navigation}) => {
             <Title style={[styles.title, {
               marginTop: 15,
               marginBottom: 5,
-            }]}>John Doe</Title>
+            }]}>hey there, John Doe</Title>
         
           </View>
         </View>
@@ -52,14 +50,7 @@ const ProfileScreen = ({navigation}) => {
       </View>
 
 
-      <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => { navigation.navigate('EditProfile')}}>
-          <View style={styles.menuItem}>
-            <MaterialIcons name="edit" color={COLORS.primary} size={25} />
-            <Text style={styles.menuItemText}>Edit profile</Text>
-          </View>
-        </TouchableRipple>
-      </View>
+    
     </SafeAreaView>
   );
 };
@@ -71,16 +62,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topUserInfoSection: {
+  
     justifyContent:'center',
+    alignItems:'center',
    paddingHorizontal:20,
     height:200,
     backgroundColor:COLORS.gray2,
     marginBottom: 25,
   },
   userInfoSection: {
+  
+    flexDirection:'column',
+    justifyContent:'center',
+    alignItems:'center',
+    // paddingHorizontal: 20,
 
-    paddingHorizontal: 30,
-    marginBottom: 25,
+    backgroundColor:'pink'
   },
   title: {
     fontSize: 24,
@@ -92,8 +89,11 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   row: {
+
     flexDirection: 'row',
+    justifyContent:'flex-start',
     marginBottom: 20,
+    backgroundColor:'black'
   },
   infoBoxWrapper: {
     borderBottomColor: '#dddddd',

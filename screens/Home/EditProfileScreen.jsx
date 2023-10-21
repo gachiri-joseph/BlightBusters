@@ -23,7 +23,7 @@ import Animated from 'react-native-reanimated';
 import {COLORS,SIZES} from '../../constants/theme'
 const EditProfileScreen = () => {
   return (
-    <View>
+    <View style={styles.container} >
       
       <View style={styles.topUserInfoSection}>
         <View style={{flexDirection:'row',justifyContent:'flex-start',alignItems:'flex-end'}}>
@@ -56,7 +56,8 @@ const EditProfileScreen = () => {
                     // }}
                   />
                 </View>
-        </TouchableOpacity>
+        
+         </TouchableOpacity>
          
         </View>
       </View>
@@ -172,6 +173,9 @@ const EditProfileScreen = () => {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   LoginTextInputContainer: {
     width: '100%',
     marginBottom: 20,
