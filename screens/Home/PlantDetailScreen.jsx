@@ -113,7 +113,7 @@ export default function PlantDetailScreen() {
              extension service or a plant pathology expert. They can provide specific recommendations based 
             on the particular strain of the pathogen in your region.</Text>
           </View>
-       <FormButton title={"Open Modal"}     onPress={() => navigation.navigate('MyModal')}/>
+      
           <FormButton title={'Check recommendation'} onPress={()=>{}}/>
         </ScrollView>
       </View>
