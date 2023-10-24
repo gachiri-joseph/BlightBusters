@@ -9,7 +9,7 @@ import {
   View,
   TextInput,
   Platform,
-  TouchableOpacity,
+  TouchableOpacity
 } from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -24,6 +24,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FormButton from '../../components/FormButton';
 import {ScrollView} from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EditProfileScreen() {
   const [darkmode, setDarkmode] = useState(false);
@@ -76,6 +77,7 @@ export default function EditProfileScreen() {
     }, 100);
   }
   return (
+    
     <BottomSheetModalProvider>
       <ScrollView
         contentContainerStyle={{
@@ -83,10 +85,10 @@ export default function EditProfileScreen() {
           backgroundColor: 'gray',
           alignItems: 'center',
           justifyContent: 'center',
-          backgroundColor: 'white',
+          backgroundColor: isOpen ? COLORS.gray2 : COLORS.white,
           padding: 20,
         }}>
-        <View style={{alignItems: 'center'}}>
+        <View style={{alignItems: 'center',marginTop:15}}>
           <View
             style={{
               flexDirection: 'row',
@@ -110,7 +112,6 @@ export default function EditProfileScreen() {
                   size={140}
                 />
               )}
-
             </View>
             <TouchableOpacity onPress={handlePresentModal}>
               <View
@@ -120,7 +121,7 @@ export default function EditProfileScreen() {
                   borderRadius: 999,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  backgroundColor: 'white',
+                  backgroundColor: isOpen ? COLORS.white : COLORS.gray2,
                   marginHorizontal: -30,
                   marginBottom: 10,
                 }}>
@@ -144,90 +145,102 @@ export default function EditProfileScreen() {
             John Doe
           </Text>
         </View>
+        <View
+          style={{
+            width:'100%',
+            marginHorizontal: 20,
+            // marginTop: ,
+            // marginBottom: 28,
+            backgroundColor: COLORS.white,
+            elevation: 3,
+            paddingHorizontal: 20,
+            borderRadius: 10,
+          }}>
+          <View style={styles.action}>
+            <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
+            <TextInput
+              placeholder="First Name"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={[
+                styles.textInput,
+                {
+                  color: COLORS.black,
+                },
+              ]}
+            />
+          </View>
+          <View style={styles.action}>
+            <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
+            <TextInput
+              placeholder="Last Name"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={[
+                styles.textInput,
+                {
+                  color: COLORS.black,
+                },
+              ]}
+            />
+          </View>
+          <View style={styles.action}>
+            <Feather name="phone" color={COLORS.black} size={20} />
+            <TextInput
+              placeholder="Phone"
+              placeholderTextColor="#666666"
+              keyboardType="number-pad"
+              autoCorrect={false}
+              style={[
+                styles.textInput,
+                {
+                  color: COLORS.black,
+                },
+              ]}
+            />
+          </View>
+          <View style={styles.action}>
+            <FontAwesome name="envelope-o" color={COLORS.black} size={20} />
+            <TextInput
+              placeholder="Email"
+              placeholderTextColor="#666666"
+              keyboardType="email-address"
+              autoCorrect={false}
+              style={[
+                styles.textInput,
+                {
+                  color: COLORS.black,
+                },
+              ]}
+            />
+          </View>
+          <View style={styles.action}>
+            <MaterialCommunityIcons
+              name="map-marker-outline"
+              color={COLORS.black}
+              size={20}
+            />
+            <TextInput
+              placeholder="Town"
+              placeholderTextColor="#666666"
+              autoCorrect={false}
+              style={[
+                styles.textInput,
+                {
+                  color: COLORS.black,
+                },
+              ]}
+            />
+          </View>
+        </View>
 
-        <View style={styles.action}>
-          <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
-          <TextInput
-            placeholder="First Name"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: COLORS.black,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
-          <TextInput
-            placeholder="Last Name"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: COLORS.black,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <Feather name="phone" color={COLORS.black} size={20} />
-          <TextInput
-            placeholder="Phone"
-            placeholderTextColor="#666666"
-            keyboardType="number-pad"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: COLORS.black,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <FontAwesome name="envelope-o" color={COLORS.black} size={20} />
-          <TextInput
-            placeholder="Email"
-            placeholderTextColor="#666666"
-            keyboardType="email-address"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: COLORS.black,
-              },
-            ]}
-          />
-        </View>
-        <View style={styles.action}>
-          <MaterialCommunityIcons
-            name="map-marker-outline"
-            color={COLORS.black}
-            size={20}
-          />
-          <TextInput
-            placeholder="Town"
-            placeholderTextColor="#666666"
-            autoCorrect={false}
-            style={[
-              styles.textInput,
-              {
-                color: COLORS.black,
-              },
-            ]}
-          />
-        </View>
         <FormButton title="Save" onPress={() => {}} />
 
         <BottomSheetModal
           ref={bottomSheetModalRef}
           index={0}
           snapPoints={snapPoints}
-          backgroundStyle={{borderRadius: 50}}
+          backgroundStyle={{borderRadius: 30, backgroundColor: COLORS.white}}
           onDismiss={() => setIsOpen(false)}>
           <View style={styles.panel}>
             <View style={{alignItems: 'center'}}>
@@ -236,13 +249,17 @@ export default function EditProfileScreen() {
                 Choose Your Profile Picture
               </Text>
             </View>
-            <FormButton title="Take Photo"  onPress={takePhotoFromCamera} />
-            <FormButton title="Choose From Library"  onPress={choosePhotoFromLibrary}/>
-            <FormButton title="Cancel"  onPress={handleDismissModal}/>
+            <FormButton title="Take Photo" onPress={takePhotoFromCamera} />
+            <FormButton
+              title="Choose From Library"
+              onPress={choosePhotoFromLibrary}
+            />
+            <FormButton title="Cancel" onPress={handleDismissModal} />
           </View>
         </BottomSheetModal>
       </ScrollView>
     </BottomSheetModalProvider>
+
   );
 }
 
@@ -257,14 +274,14 @@ const styles = StyleSheet.create({
   },
   panel: {
     padding: 20,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.white,
     paddingTop: 20,
-    // borderTopLeftRadius: 20,
-    // borderTopRightRadius: 20,
-    // shadowColor: '#000000',
-    // shadowOffset: {width: 0, height: 0},
-    // shadowRadius: 5,
-    // shadowOpacity: 0.4,
+    borderTopLeftRadius: 30,
+    borderTopRightRadius: 30,
+    shadowColor: '#000000',
+    shadowOffset: {width: 0, height: 0},
+    shadowRadius: 5,
+    shadowOpacity: 0.4,
   },
   header: {
     backgroundColor: '#FFFFFF',
@@ -289,6 +306,7 @@ const styles = StyleSheet.create({
   },
   panelTitle: {
     fontSize: 27,
+    color: 'black',
     height: 35,
   },
   panelSubtitle: {

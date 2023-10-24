@@ -1,22 +1,34 @@
 import React from 'react';
-import { View, SafeAreaView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet,TouchableOpacity, Switch} from 'react-native';
 import {
   Avatar,
   Title,
   Text,
 } from 'react-native-paper';
-import {COLORS,SIZES} from '../../constants/theme'
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import Feather from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-
+import {COLORS} from '../../constants/theme'
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import Feather from 'react-native-vector-icons/Feather';
+import InputContainer from '../../components/InputContainer';
+import {showMessage} from 'react-native-flash-message';
+import auth from '@react-native-firebase/auth';
 
 const ProfileScreen = ({navigation}) => {
 
-
+  async function handleLogout() {
+    try {
+      await auth()
+        .signOut()
+        .then(() => console.log('User signed out!'));
+    } catch (e) {
+      showMessage({
+        message: 'failed to log out!',
+        type: 'danger',
+        icon: 'danger',
+      });
+    }
+  }
   return (
-    <SafeAreaView style={styles.container}>
+    <ScrollView   style={styles.container}>
 
       <View style={styles.topUserInfoSection}>
         <View style={{ flexDirection: 'column', marginTop: 15 ,justifyContent:'flex-start',alignItems:'center'}}>
@@ -35,23 +47,56 @@ const ProfileScreen = ({navigation}) => {
       </View>
 
       <View style={styles.userInfoSection}>
-        <View style={styles.row}>
-          <Ionicons name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20,fontSize:20 }}>Kolkata, India</Text>
-        </View>
-        <View style={styles.row}>
-          <FontAwesome name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20,fontSize:20  }}>+91-900000009</Text>
-        </View>
-        <View style={styles.row}>
-          <Feather name="mail" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20,fontSize:20  }}>john_doe@email.com</Text>
-        </View>
+        <InputContainer iconType={"phone"} placeholder={'+91-900000009'} />
+        <InputContainer iconType={"envelope"} placeholder={'john_doe@email.com'} />
+        <InputContainer iconType={"location-dot"} placeholder={'Kolkata, India'} />
+      </View> 
+
+      <View style={styles.SecondaryContainer}>
+            <View style={styles.SecondaryCont}>
+              <Text style={styles.subtitle}>Language</Text>
+              <Switch
+                style={{marginLeft: 'auto'}}
+                // trackColor={{false: '#767577', true: '#81b0ff'}}
+                // thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                // value={notifications}
+                // onChange={() => setNotifications(!notifications)}
+              />
+          </View>
       </View>
-
-
-    
-    </SafeAreaView>
+      <View style={styles.SecondaryContainer}>
+        <TouchableOpacity>
+        <View style={styles.SecondaryCont}>
+        <Text style={styles.subtitle}>Logout</Text>
+        <Feather
+                  // style={{marginLeft: 'auto'}}
+                  name="log-out"
+                  color={COLORS.black}
+                  size={20}
+                  onPress={handleLogout}
+                />
+            
+               
+                </View>
+        </TouchableOpacity>
+        <TouchableOpacity>
+        <View style={styles.SecondaryCont}>
+        <Text style={styles.subtitle}>Delete account</Text>
+        <AntDesign
+                  // style={{marginLeft: 'auto'}}
+                  name="delete"
+                  color={COLORS.black}
+                  size={20}
+                  onPress={()=>{}}
+                />
+              
+               
+                </View>
+        </TouchableOpacity>
+      </View>
+      
+    </ScrollView>
   );
 };
 
@@ -60,6 +105,21 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:COLORS.white
+  },
+  subtitle: {
+    color: COLORS.gray,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  SecondaryCont: {
+    flex: 1,
+    width: 200,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+    // backgroundColor:'black'
   },
   topUserInfoSection: {
   
@@ -67,17 +127,25 @@ const styles = StyleSheet.create({
     alignItems:'center',
    paddingHorizontal:20,
     height:200,
-    backgroundColor:COLORS.gray2,
     marginBottom: 25,
+  },
+  SecondaryContainer:{
+
+    marginHorizontal: 20,
+    marginTop: 28,
+    marginBottom:28,
+    backgroundColor: COLORS.white,
+    elevation: 3,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    // paddingBottom: 20, 
   },
   userInfoSection: {
   
     flexDirection:'column',
     justifyContent:'center',
     alignItems:'center',
-    // paddingHorizontal: 20,
-
-    backgroundColor:'pink'
+    paddingHorizontal: 20,
   },
   title: {
     fontSize: 24,

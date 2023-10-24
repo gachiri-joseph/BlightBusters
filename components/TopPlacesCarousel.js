@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import { sizes,colors, shadow, SPACING } from '../constants/theme';
+import {sizes, colors, shadow, SPACING} from '../constants/theme';
 import FavoriteButton from './FavoriteButton';
 
-const CARD_WIDTH = sizes.width - 80;
+const CARD_WIDTH = sizes.width - 70;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + SPACING.l;
 
-const TopPlacesCarousel = ({list}) => {
+const TopPlacesCarousel = ({list, navigation}) => {
   return (
     <FlatList
       data={list}
@@ -29,9 +29,19 @@ const TopPlacesCarousel = ({list}) => {
             style={{
               marginLeft: SPACING.l,
               marginRight: index === list.length - 1 ? SPACING.l : 0,
+            }}
+            onPress={() => {
+              if (item.id === 1) {
+                navigation.navigate('InfoScreen1');
+              } else if (item.id === 2) {
+                navigation.navigate('InfoScreen2');
+              } else {
+                navigation.navigate('InfoScreen3');
+              }
+
+            
             }}>
             <View style={[styles.card, shadow.dark]}>
-              <FavoriteButton style={styles.favorite} />
               <View style={styles.imageBox}>
                 <Image source={item.image} style={styles.image} />
               </View>
@@ -53,12 +63,12 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     marginVertical: 10,
   },
-  favorite: {
-    position: 'absolute',
-    top: SPACING.m,
-    right: SPACING.m,
-    zIndex: 1,
-  },
+  // favorite: {
+  //   position: 'absolute',
+  //   top: SPACING.m,
+  //   right: SPACING.m,
+  //   zIndex: 1,
+  // },
   imageBox: {
     width: CARD_WIDTH,
     height: CARD_HEIGHT,

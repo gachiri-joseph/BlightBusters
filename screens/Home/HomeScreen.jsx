@@ -8,18 +8,26 @@ import SectionHeader from '../../components/SectionHeader';
 import TripsList from '../../components/TripsList';
 import { colors } from '../../constants/theme';
 
-const HomeScreen = () => {
+
+const HomeScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <ScreenHeader mainTitle="welcome to blightbusters" secondTitle="Getting started" /> 
+      {/* <ScreenHeader mainTitle="welcome to blightbusters" secondTitle="Getting started" />  */}
+    
       <ScrollView showsVerticalScrollIndicator={false}>
-        <TopPlacesCarousel list={TOP_PLACES} />
-        <SectionHeader
-          title="Popular Trips"
-          buttonTitle="See All"
+      <ScreenHeader  /> 
+      <SectionHeader
+          title="Getting started"
+          // buttonTitle="See All"
           onPress={() => {}}
         />
-        <TripsList list={PLACES} />
+        <TopPlacesCarousel list={TOP_PLACES} navigation={navigation}/>
+        <SectionHeader
+          title="Popular topics"
+          // buttonTitle="See All"
+          // onPress={() => {}}
+        />
+        <TripsList list={PLACES} navigation={navigation}/>
       </ScrollView>
     </View>
   );

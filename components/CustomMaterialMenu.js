@@ -54,14 +54,12 @@ const CustomMaterialMenu = ({
       <Menu
         style={{
           position: 'absolute',
-          top: 50,
-          // width:200,
-          // height: 200,
+          top: 56,
+          left:355,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'flex-start',
-          // backgroundColor: 'red',
           borderRadius: 15,
         }}
         visible={visible}
@@ -137,6 +135,52 @@ const CustomMaterialMenu = ({
             // alignItems: 'center',
           }}>
           <View style={styles.contentContainer}>
+            <View style={styles.row}>
+              <Text style={styles.subtitle}>Terms of use</Text>
+              <Switch
+                style={{marginLeft: 'auto'}}
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onChange={() => setDarkmode(!darkmode)}
+                value={darkmode}
+              />
+            </View>
+          </View>
+        </MenuItem>
+        <MenuDivider/>
+        <MenuItem
+          style={{
+            color: COLORS.white,
+            display: 'flex',
+            // backgroundColor: COLORS.black,
+            // justifyContent: 'center',
+            // alignItems: 'center',
+          }}>
+          <View style={styles.contentContainer}>
+            <View style={styles.row}>
+              <Text style={styles.subtitle}>Privacy policy</Text>
+              <Switch
+                style={{marginLeft: 'auto'}}
+                trackColor={{false: '#767577', true: '#81b0ff'}}
+                thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
+                ios_backgroundColor="#3e3e3e"
+                onChange={() => setDarkmode(!darkmode)}
+                value={darkmode}
+              />
+            </View>
+          </View>
+        </MenuItem>
+        {/* <MenuDivider/>
+        <MenuItem
+          style={{
+            color: COLORS.white,
+            display: 'flex',
+            // backgroundColor: COLORS.black,
+            // justifyContent: 'center',
+            // alignItems: 'center',
+          }}>
+          <View style={styles.contentContainer}>
             <TouchableOpacity>
               <View style={styles.row}>
                 <Text style={styles.subtitle}>Logout</Text>
@@ -150,7 +194,7 @@ const CustomMaterialMenu = ({
               </View>
             </TouchableOpacity>
           </View>
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </View>
   );

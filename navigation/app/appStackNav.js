@@ -1,6 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import BottomTabNav from './bottomTabNav';
+import ModalScreen from '../../screens/Home/ModalScreen';
 
 const AppStack = createNativeStackNavigator();
 

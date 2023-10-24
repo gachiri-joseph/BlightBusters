@@ -6,12 +6,12 @@ import FavoriteButton from './FavoriteButton';
 const CARD_WIDTH = sizes.width / 2 - (SPACING.l + SPACING.l / 2);
 const CARD_HEIGHT = 220;
 
-const TripsList = ({list}) => {
+const TripsList = ({list,navigation}) => {
   return (
     <View style={styles.container}>
       {list.map((item, index) => {
         return (
-          <TouchableOpacity key={index}style={styles.cardContainer}>
+          <TouchableOpacity key={index}style={styles.cardContainer} onPress={()=>navigation.navigate('PlantDetails')}>
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image} source={item.image} />
@@ -21,7 +21,7 @@ const TripsList = ({list}) => {
                   <Text style={styles.title}>{item.title}</Text>
                   <Text style={styles.location}>{item.location}</Text>
                 </View>
-                <FavoriteButton />
+             
               </View>
             </View>
           </TouchableOpacity>

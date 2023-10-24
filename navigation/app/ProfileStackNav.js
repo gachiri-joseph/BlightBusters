@@ -12,6 +12,7 @@ const ProfileStackNav = ({navigation}) => {
   return (
     <ProfileStack.Navigator
     initialRouteName='ProfileHome'
+   
       screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.white,
@@ -20,6 +21,7 @@ const ProfileStackNav = ({navigation}) => {
           height: 80, // Specify the height of your custom header
         },
         headerTintColor: COLORS.black,
+       
       }}>
       <ProfileStack.Screen
         name="ProfileHome"
