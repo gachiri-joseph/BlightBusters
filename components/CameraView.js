@@ -1,59 +1,41 @@
-import {View, Text, TouchableOpacity, ImageBackground} from 'react-native';
+import {View, Image} from 'react-native';
 import React from 'react';
-import { COLORS } from '../constants/theme';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import IconButton from './IconButton';
+import {COLORS} from '../constants/theme';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
 const CameraView = ({photo, retakePhoto, savePhoto}) => {
-//   console.log('sdsfds', photo);
   return (
     <View
       style={{
-        backgroundColor: 'transparent',
-        flex: 1,
+        backgroundColor: COLORS.black,
         width: '100%',
         height: '100%',
+        // flexDirection:'column',
+        justifyContent: 'center',
+        alignItems: 'center',
       }}>
-      <ImageBackground
-        source={{
-          uri: `file://'${photo}`,
-        }}
+      <View style={{width: wp(75), height: hp(40)}}>
+        <Image
+          style={{width: '100%', height: '100%',resizeMode:'contain'}}
+          source={{
+            uri: `file://'${photo}`,
+          }}
+        />
+      </View>
+      <View
         style={{
-          flex: 1,
+          width: '100%',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          marginTop: wp(10),
         }}>
-        <View
-          style={{
-            
-            position:'absolute',
-            bottom:20,
-            width:'100%',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <TouchableOpacity
-            onPress={retakePhoto}
-            style={{
-              width: 130,
-              height: 40,
-              backgroundColor:'',
-              alignItems: 'center',
-              borderRadius: 4,
-            }}>
-                  <MaterialCommunityIcons name="camera-retake" color={COLORS.white} size={32} />
-               
-           
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={savePhoto}
-            style={{
-              width: 130,
-              height: 40,
-
-              alignItems: 'center',
-              borderRadius: 4,
-            }}>
-            <MaterialCommunityIcons name="check" color={COLORS.white} size={32} />
-          </TouchableOpacity>
-        </View>
-      </ImageBackground>
+        <IconButton icon={'close-circle'} onPress={retakePhoto} />
+        <IconButton icon={'check'} onPress={savePhoto} />
+      </View>
     </View>
   );
 };

@@ -1,21 +1,22 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState, useRef,useCallback, useMemo} from 'react';
 import {
   View,
   StyleSheet,
-  Button,
   TouchableOpacity,
   Text,
   Linking,
   Image,
-  ActivityIndicator,
+  Pressable,
 } from 'react-native';
-import {Camera} from 'react-native-vision-camera';
+import {Camera,onMediaCaptured,useFrameProcessor} from 'react-native-vision-camera';
 import {useAppState} from '@react-native-community/hooks';
 import {useIsFocused} from '@react-navigation/native';
 import CameraView from '../../components/CameraView';
 import * as ImagePicker from 'react-native-image-picker';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from '../../constants/theme';
+import CameraButton from '../../components/CameraButton';
+import IconButton from '../../components/IconButton';
+import CameraRow from '../../components/CameraRow';
+import CameraInfo from '../../components/CameraInfo';
 // ...
 
 const CameraScreen = ({navigation}) => {
@@ -25,12 +26,23 @@ const CameraScreen = ({navigation}) => {
   // console.log(devices)
   // const [startCamera,setStartCamera] = useState(false)
   const [showCamera, setShowCamera] = useState(true);
-  const [imageSource, setImageSource] = useState('');
+  const [imageSource, setImageSource] = useState(null);
   const currentAppState = useAppState();
   const isFocused = useIsFocused();
+  const [flashOn,setFlashOn]=useState(false)
   const isActive = isFocused && currentAppState === 'active';
-  console.log(isActive);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  // console.log('isActive////////////////////////////', isActive);
+  const takePhotoOptions = useMemo(
+    () => ({
+      // photoCodec: 'jpeg',
+      // qualityPrioritization: 'speed',
+      flash:  flashOn ?'on':'off',
+      quality: 90,
+      enableShutterSound: false,
+    }),
+    [flashOn],
+  )
   useEffect(() => {
     async function getPermission() {
       const cameraPermission = await Camera.getCameraPermissionStatus();
@@ -41,36 +53,58 @@ const CameraScreen = ({navigation}) => {
       }
       if (newCameraPermission === 'denied') await Linking.openSettings();
 
-      console.log(newCameraPermission);
+      // console.log('permission', newCameraPermission);
     }
     getPermission();
   }, []);
 
-  const capturePhoto = async () => {
-    if (camera.current !== null) {
-      const photo = await camera.current.takePhoto({});
+  
+  //#region Camera Capture
+  const capturePhoto= useCallback(async () => {
+    try {
+      if (camera.current == null) throw new Error('Camera ref is null!')
+
+      console.log('Taking photo...')
+      const photo = await camera.current.takePhoto(takePhotoOptions)
+
       setImageSource(photo.path);
       setShowCamera(false);
-      console.log(photo);
+      console.log('photo',photo);
+    } catch (e) {
+      console.error('Failed to take photo!', e)
     }
-  };
-  const chooseFile = async (type) => {
+  }, [camera, onMediaCaptured, takePhotoOptions])
+
+  // const capturePhoto = async () => {
+  //   if (camera.current !== null) {
+  //     const photo = await camera.current.takePhoto({
+  //       flash: flashOn ?'on':'off'
+  //     });
+  //     setImageSource(photo.path);
+  //     setShowCamera(false);
+  //     console.log('photo',photo);
+  //   }
+  // };
+  const chooseFile = async type => {
     let options = {
       mediaType: type,
       maxWidth: 300,
       maxHeight: 550,
       quality: 1,
     };
-    const result= await ImagePicker.launchImageLibrary(options);
-  
-      if (!result.canceled) {
-        setImageSource(result.assets[0].uri);
-      }
-    // navigation.navigate('CameraScreen')
-    console.log('result',result)
-    }
 
-    
+    await ImagePicker.launchImageLibrary(options, response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('Image picker error: ', response.error);
+      } else {
+        let imageUri = response.uri || response.assets?.[0]?.uri;
+        setImageSource(imageUri);
+      }
+    });
+  };
+
   const retakePhoto = () => {
     setImageSource(null);
     // setPreviewVisible(false)
@@ -82,6 +116,9 @@ const CameraScreen = ({navigation}) => {
     // setPreviewVisible(false)
     setShowCamera(true);
   };
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
   if (device == null) {
     return (
       <>
@@ -92,7 +129,7 @@ const CameraScreen = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      {showCamera && isActive ? (
+      {showCamera && isActive && imageSource === null ? (
         <>
           <Camera
             ref={camera}
@@ -101,79 +138,76 @@ const CameraScreen = ({navigation}) => {
             isActive={isActive}
             photo={true}
           />
-           <TouchableOpacity
-              onPress={()=>navigation.goBack()}
-              style={styles.backButton}>
-              <MaterialCommunityIcons
-                name="close-circle"
-                color={COLORS.white}
-                size={35}
-              />
-            </TouchableOpacity>
           <View
             style={{
               position: 'absolute',
-              bottom: 20,
-              width: '100%',
               flexDirection: 'row',
-              justifyContent: 'space-around',
-              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              top: 0,
+              paddingTop: 20,
             }}>
-            <TouchableOpacity
-              onPress={chooseFile}
+            <IconButton
+              icon={'close-circle'}
+              onPress={() => navigation.goBack()}
+            />
+            <IconButton
+              icon={flashOn ?'flash':'flash-off'}
+              onPress={() => setFlashOn(!flashOn)}
+            />
+          </View>
+
+          {/* <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}>
+            <MaterialCommunityIcons
+              name="close-circle"
+              color={COLORS.white}
+              size={35}
+            />
+          </TouchableOpacity> */}
+          <CameraRow>
+            <Pressable
               style={{
                 width: 60,
                 height: 40,
                 alignItems: 'center',
                 borderRadius: 4,
-              }}>
+              }}
+              onPress={() => chooseFile('photo')}>
               <View style={{borderRadius: 10}}>
                 <Image
                   style={{width: 30, height: 30, borderRadius: 10}}
                   source={require('../../assets/images/gallery.jpg')}
                 />
               </View>
-            </TouchableOpacity>
-
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={styles.camButton}
-                onPress={() => capturePhoto()}
-              />
-            </View>
-            <TouchableOpacity
-              onPress={()=>{}}
-              style={{
-                width: 60,
-                height: 40,
-                alignItems: 'center',
-                borderRadius: 4,
-              }}>
-              <MaterialCommunityIcons
-                name="information"
-                color={COLORS.white}
-                size={35}
-              />
-            </TouchableOpacity>
-          </View>
+            </Pressable>
+            <CameraButton onPress={() => capturePhoto()} />
+            <CameraInfo isVisible={isModalVisible} onClose={onModalClose} />
+            <IconButton
+              type={'icon'}
+              icon={'information'}
+              onPress={() => setIsModalVisible(true)}
+            />
+          </CameraRow>
         </>
       ) : (
-        <>
-          {imageSource !== '' ? (
-            <CameraView
-              photo={imageSource}
-              savePhoto={savePhoto}
-              retakePhoto={retakePhoto}
-            />
-          ) : // <Image
-          //   style={styles.image}
-          //   source={{
-          //     uri: `file://'${imageSource}`,
-          //   }}
-          // />
-          null}
-
-          {/* <View style={styles.backButton}>
+        <View
+          style={{
+            backgroundColor: 'black',
+            flex: 1,
+            width: '100%',
+            height: '100%',
+          }}></View>
+      )}
+      {imageSource !== null ? (
+        <CameraView
+          photo={imageSource}
+          savePhoto={savePhoto}
+          retakePhoto={retakePhoto}
+        />
+      ) : null}
+      {/* <View style={styles.backButton}>
             <TouchableOpacity
               style={{
                 backgroundColor: 'rgba(0,0,0,0.2)',
@@ -223,9 +257,7 @@ const CameraScreen = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View> */}
-          {/* <ActivityIndicator size={'large'} /> */}
-        </>
-      )}
+      {/* <ActivityIndicator size={'large'} /> */}
     </View>
   );
 };
@@ -236,9 +268,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  button: {
-    // backgroundColor: 'gray',
-  },
+
   backButton: {
     position: 'absolute',
     justifyContent: 'center',
@@ -246,26 +276,7 @@ const styles = StyleSheet.create({
     top: 0,
     padding: 20,
   },
-  buttonContainer: {
-    // backgroundColor: 'rgba(0,0,0,0.2)',
-    padding: 20,
-  },
-  buttons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
-  camButton: {
-    height: 80,
-    width: 80,
-    borderRadius: 40,
-    //ADD backgroundColor COLOR GREY
-    backgroundColor: COLORS.primary,
 
-    // alignSelf: 'center',
-    borderWidth: 4,
-    borderColor: 'white',
-  },
   image: {
     width: '100%',
     height: '100%',

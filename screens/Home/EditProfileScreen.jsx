@@ -45,10 +45,22 @@ export default function EditProfileScreen() {
       console.log(image);
       setImage(image.path);
       //   bs.current.snapTo(1);
-    });
+    }).catch(err=>{
+      console.log(err) 
+      return err;})
   };
 
   const choosePhotoFromLibrary = () => {
+
+
+
+    // const image=await ImagePicker.openPicker({
+    //   width: 300,
+    //   height: 300,
+    //   cropping: true,
+    //   compressImageQuality: 0.7,
+    // });
+    // setImage(image.path);
     ImagePicker.openPicker({
       width: 300,
       height: 300,
@@ -58,7 +70,9 @@ export default function EditProfileScreen() {
       console.log(image);
       setImage(image.path);
       //   bs.current.snapTo(1);
-    });
+    }).catch(err=>{
+      console.log(err) 
+      return err;})
   };
   const bottomSheetModalRef = useRef(null);
 
