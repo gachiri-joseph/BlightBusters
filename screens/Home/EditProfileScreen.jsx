@@ -1,30 +1,20 @@
 import {
-  Button,
-  Pressable,
   StyleSheet,
-  Switch,
   Text,
-  ImageBackground,
   useWindowDimensions,
   View,
-  TextInput,
   Platform,
-  TouchableOpacity
+  TouchableOpacity,
 } from 'react-native';
 import {Avatar} from 'react-native-paper';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
-import {useRef, useState} from 'react';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import Feather from 'react-native-vector-icons/Feather';
+import React, {useRef, useState} from 'react';
 import {COLORS} from '../../constants/theme';
-
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import FormButton from '../../components/FormButton';
 import {ScrollView} from 'react-native-gesture-handler';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import FormInput from '../../components/FormInput';
 
 export default function EditProfileScreen() {
   const [darkmode, setDarkmode] = useState(false);
@@ -33,6 +23,11 @@ export default function EditProfileScreen() {
   const [theme, setTheme] = useState('dim');
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(null);
+
+  const [email, setEmail] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [location, setLocation] = useState('');
+  const [number, setNumber] = useState('');
   //   const {colors} = useTheme();
 
   const takePhotoFromCamera = () => {
@@ -41,38 +36,34 @@ export default function EditProfileScreen() {
       compressImageMaxHeight: 300,
       cropping: true,
       compressImageQuality: 0.7,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-      //   bs.current.snapTo(1);
-    }).catch(err=>{
-      console.log(err) 
-      return err;})
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
+        //   bs.current.snapTo(1);
+      })
+      .catch(err => {
+        console.log(err);
+        return err;
+      });
   };
 
   const choosePhotoFromLibrary = () => {
-
-
-
-    // const image=await ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 300,
-    //   cropping: true,
-    //   compressImageQuality: 0.7,
-    // });
-    // setImage(image.path);
     ImagePicker.openPicker({
       width: 300,
       height: 300,
       cropping: true,
       compressImageQuality: 0.7,
-    }).then(image => {
-      console.log(image);
-      setImage(image.path);
-      //   bs.current.snapTo(1);
-    }).catch(err=>{
-      console.log(err) 
-      return err;})
+    })
+      .then(image => {
+        console.log(image);
+        setImage(image.path);
+        //   bs.current.snapTo(1);
+      })
+      .catch(err => {
+        console.log(err);
+        return err;
+      });
   };
   const bottomSheetModalRef = useRef(null);
 
@@ -91,18 +82,16 @@ export default function EditProfileScreen() {
     }, 100);
   }
   return (
-    
     <BottomSheetModalProvider>
       <ScrollView
         contentContainerStyle={{
-          flex: 1,
           backgroundColor: 'gray',
           alignItems: 'center',
           justifyContent: 'center',
           backgroundColor: isOpen ? COLORS.gray2 : COLORS.white,
-          padding: 20,
+          paddingHorizontal: 20,
         }}>
-        <View style={{alignItems: 'center',marginTop:15}}>
+        <View style={{alignItems: 'center', marginVertical: 28}}>
           <View
             style={{
               flexDirection: 'row',
@@ -139,114 +128,51 @@ export default function EditProfileScreen() {
                   marginHorizontal: -30,
                   marginBottom: 10,
                 }}>
-                <MaterialCommunityIcons
-                  name="camera"
-                  size={24}
-                  color="black"
-                  // style={{
-                  //   opacity: 0.7,
-                  //   alignItems: 'center',
-                  //   justifyContent: 'center',
-                  //   borderWidth: 1,
-                  //   borderColor: '#fff',
-                  //   borderRadius: 10,
-                  // }}
-                />
+                <MaterialCommunityIcons name="camera" size={24} color="black" />
               </View>
             </TouchableOpacity>
           </View>
-          <Text style={{marginTop: 10, fontSize: 18, fontWeight: 'bold'}}>
-            John Doe
-          </Text>
         </View>
-        <View
-          style={{
-            width:'100%',
-            marginHorizontal: 20,
-            // marginTop: ,
-            // marginBottom: 28,
-            backgroundColor: COLORS.white,
-            elevation: 3,
-            paddingHorizontal: 20,
-            borderRadius: 10,
-          }}>
-          <View style={styles.action}>
-            <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
-            <TextInput
-              placeholder="First Name"
-              placeholderTextColor="#666666"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: COLORS.black,
-                },
-              ]}
-            />
-          </View>
-          <View style={styles.action}>
-            <FontAwesome name="user-circle-o" color={COLORS.black} size={20} />
-            <TextInput
-              placeholder="Last Name"
-              placeholderTextColor="#666666"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: COLORS.black,
-                },
-              ]}
-            />
-          </View>
-          <View style={styles.action}>
-            <Feather name="phone" color={COLORS.black} size={20} />
-            <TextInput
-              placeholder="Phone"
-              placeholderTextColor="#666666"
-              keyboardType="number-pad"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: COLORS.black,
-                },
-              ]}
-            />
-          </View>
-          <View style={styles.action}>
-            <FontAwesome name="envelope-o" color={COLORS.black} size={20} />
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor="#666666"
-              keyboardType="email-address"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: COLORS.black,
-                },
-              ]}
-            />
-          </View>
-          <View style={styles.action}>
-            <MaterialCommunityIcons
-              name="map-marker-outline"
-              color={COLORS.black}
-              size={20}
-            />
-            <TextInput
-              placeholder="Town"
-              placeholderTextColor="#666666"
-              autoCorrect={false}
-              style={[
-                styles.textInput,
-                {
-                  color: COLORS.black,
-                },
-              ]}
-            />
-          </View>
-        </View>
+
+        <FormInput
+          labelValue={email}
+          onChangeText={userEmail => setEmail(userEmail)}
+          placeholderText="Change your email"
+          iconType="email"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={false}
+        />
+
+        <FormInput
+          labelValue={fullName}
+          onChangeText={userName => setFullName(userName)}
+          placeholderText="change your username"
+          iconType="person"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={false}
+        />
+        <FormInput
+          labelValue={number}
+          onChangeText={userNumber => setNumber(userNumber)}
+          placeholderText="change your number"
+          iconType="phone"
+          keyboardType="number-pad"
+          autoCapitalize="none"
+          autoCorrect={false}
+          secureTextEntry={false}
+        />
+        <FormInput
+          labelValue={location}
+          onChangeText={userLocation => setLocation(userLocation)}
+          placeholderText="change your location"
+          iconType="location-on"
+          autoCapitalize='words'
+          autoCorrect={false}
+          secureTextEntry={false}
+        />
 
         <FormButton title="Save" onPress={() => {}} />
 
@@ -273,7 +199,6 @@ export default function EditProfileScreen() {
         </BottomSheetModal>
       </ScrollView>
     </BottomSheetModalProvider>
-
   );
 }
 

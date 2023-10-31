@@ -5,7 +5,7 @@ import { COLORS } from '../constants/theme';
 export default function IconButton({ icon,onPress }) {
   return (
     <Pressable style={styles.iconButton} onPress={onPress}>
-      <MaterialCommunityIcons name={icon} size={35} color={COLORS.white}/>
+      <MaterialCommunityIcons name={icon} size={30} color={COLORS.white}/>
     </Pressable>
   );
 }

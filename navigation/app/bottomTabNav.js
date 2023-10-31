@@ -69,7 +69,7 @@ const BottomTabNav = () => {
             },
           }}
         />
-        <BottomTab.Screen
+        {/* <BottomTab.Screen
           name="PlantStack"
           component={PlantStackNav}
           options={{
@@ -87,7 +87,7 @@ const BottomTabNav = () => {
               );
             },
           }}
-        />
+        /> */}
         <BottomTab.Screen
           name="ProfileStack"
           component={ProfileStackNav}

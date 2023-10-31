@@ -11,6 +11,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import InputContainer from '../../components/InputContainer';
 import {showMessage} from 'react-native-flash-message';
 import auth from '@react-native-firebase/auth';
+import FormButton from '../../components/FormButton';
 
 const ProfileScreen = ({navigation}) => {
 
@@ -34,7 +35,7 @@ const ProfileScreen = ({navigation}) => {
         <View style={{ flexDirection: 'column', marginTop: 15 ,justifyContent:'flex-start',alignItems:'center'}}>
           <Avatar.Image
             source={require('../../assets/images/135.png')}
-            size={110}
+            size={140}
           />
           <View style={{ marginLeft: 20 }}>
             <Title style={[styles.title, {
@@ -47,54 +48,18 @@ const ProfileScreen = ({navigation}) => {
       </View>
 
       <View style={styles.userInfoSection}>
+        <InputContainer iconType={"user"} placeholder={'john doe'} />
         <InputContainer iconType={"phone"} placeholder={'+91-900000009'} />
         <InputContainer iconType={"envelope"} placeholder={'john_doe@email.com'} />
         <InputContainer iconType={"location-dot"} placeholder={'Kolkata, India'} />
+        <FormButton title='log out'  onPress={handleLogout}/>
+        <FormButton title='Delete Account'  onPress={()=>{}}/>
       </View> 
+  
+      
 
-      <View style={styles.SecondaryContainer}>
-            <View style={styles.SecondaryCont}>
-              <Text style={styles.subtitle}>Language</Text>
-              <Switch
-                style={{marginLeft: 'auto'}}
-                // trackColor={{false: '#767577', true: '#81b0ff'}}
-                // thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                // value={notifications}
-                // onChange={() => setNotifications(!notifications)}
-              />
-          </View>
-      </View>
-      <View style={styles.SecondaryContainer}>
-        <TouchableOpacity>
-        <View style={styles.SecondaryCont}>
-        <Text style={styles.subtitle}>Logout</Text>
-        <Feather
-                  // style={{marginLeft: 'auto'}}
-                  name="log-out"
-                  color={COLORS.black}
-                  size={20}
-                  onPress={handleLogout}
-                />
-            
-               
-                </View>
-        </TouchableOpacity>
-        <TouchableOpacity>
-        <View style={styles.SecondaryCont}>
-        <Text style={styles.subtitle}>Delete account</Text>
-        <AntDesign
-                  // style={{marginLeft: 'auto'}}
-                  name="delete"
-                  color={COLORS.black}
-                  size={20}
-                  onPress={()=>{}}
-                />
-              
-               
-                </View>
-        </TouchableOpacity>
-      </View>
+   
+
       
     </ScrollView>
   );
@@ -127,7 +92,7 @@ const styles = StyleSheet.create({
     alignItems:'center',
    paddingHorizontal:20,
     height:200,
-    marginBottom: 25,
+    marginVertical:28,
   },
   SecondaryContainer:{
 

@@ -30,9 +30,10 @@ const CameraScreen = ({navigation}) => {
   const currentAppState = useAppState();
   const isFocused = useIsFocused();
   const [flashOn,setFlashOn]=useState(false)
-  const isActive = isFocused && currentAppState === 'active';
+  const isActive = isFocused === true;
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // console.log('isActive////////////////////////////', isActive);
+  // console.log('isFocused////////////////////////////', isFocused);
+  // console.log('isCurrentAppState////////////////////////////', currentAppState);
   const takePhotoOptions = useMemo(
     () => ({
       // photoCodec: 'jpeg',
@@ -177,7 +178,7 @@ const CameraScreen = ({navigation}) => {
               onPress={() => chooseFile('photo')}>
               <View style={{borderRadius: 10}}>
                 <Image
-                  style={{width: 30, height: 30, borderRadius: 10}}
+                  style={{width: 28, height: 28, borderRadius: 10}}
                   source={require('../../assets/images/gallery.jpg')}
                 />
               </View>
@@ -202,6 +203,7 @@ const CameraScreen = ({navigation}) => {
       )}
       {imageSource !== null ? (
         <CameraView
+        navigation={navigation}
           photo={imageSource}
           savePhoto={savePhoto}
           retakePhoto={retakePhoto}

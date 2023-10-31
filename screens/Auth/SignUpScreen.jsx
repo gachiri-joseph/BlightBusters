@@ -12,7 +12,7 @@ import {
 import {showMessage} from 'react-native-flash-message';
 import {useDispatch} from 'react-redux';
 import {setloading} from '../../redux/slices/loadingSlice';
-import Animated, {FadeIn, FadeOut} from 'react-native-reanimated';
+import Animated, {FadeIn, FadeOut,SlideInRight} from 'react-native-reanimated';
 import {SIZES, COLORS} from '../../constants/theme';
 
 const SignUpScreen = ({navigation}) => {
@@ -123,7 +123,7 @@ const SignUpScreen = ({navigation}) => {
   };
   return (
     <Animated.ScrollView
-      entering={FadeIn.duration(500).delay(200)}
+      entering={SlideInRight.duration(100)}
       exiting={FadeOut.duration(300).delay(250)}>
       {/* <Text style={styles.text}>Create an account</Text> */}
       <View style={styles.container}>
@@ -217,7 +217,7 @@ export default SignUpScreen;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#f9fafd',
+    // backgroundColor: '#f9fafd',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',

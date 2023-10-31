@@ -4,9 +4,11 @@ import {useSelector, useDispatch} from 'react-redux';
 import auth from '@react-native-firebase/auth';
 import {setloading} from '../redux/slices/loadingSlice';
 import AuthStack from './auth/AuthStackNav';
-import AppStackNav from './app/appStackNav';
+
 import LoadingScreen from '../screens/Home/LoadingScreen';
 import {setUser} from '../redux/slices/userSlice';
+// import AppStackNav from './app/appStackNav';
+import AppStackNav from './app/AppStack';
 // import SplashScreen from '../screens/Home/SplashScreen';
 
 const Routes = () => {
@@ -36,7 +38,7 @@ const Routes = () => {
 
   return (
     <NavigationContainer>
-      {isLoading ? <LoadingScreen /> : userr ? <AppStackNav /> : <AuthStack />}
+      {isLoading ? <LoadingScreen /> : userr ? <AppStackNav/> : <AuthStack />}
     </NavigationContainer>
   );
 

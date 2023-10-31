@@ -6,7 +6,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-const CameraView = ({photo, retakePhoto, savePhoto}) => {
+const CameraView = ({photo, retakePhoto, savePhoto,navigation}) => {
   return (
     <View
       style={{
@@ -34,7 +34,7 @@ const CameraView = ({photo, retakePhoto, savePhoto}) => {
           marginTop: wp(10),
         }}>
         <IconButton icon={'close-circle'} onPress={retakePhoto} />
-        <IconButton icon={'check'} onPress={savePhoto} />
+        <IconButton icon={'check'} onPress={()=>navigation.navigate('loadingAnalysis')} />
       </View>
     </View>
   );

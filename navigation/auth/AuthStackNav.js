@@ -58,6 +58,7 @@ const AuthStack = () => {
             shadowColor: '#f9fafd',
             elevation: 0,
           },
+          
         })}
       />
       <NativeStack.Screen
@@ -71,6 +72,7 @@ const AuthStack = () => {
             shadowColor: '#f9fafd',
             elevation: 0,
           },
+        
         })}
       />
       <NativeStack.Screen

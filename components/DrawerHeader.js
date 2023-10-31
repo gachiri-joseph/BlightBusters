@@ -59,6 +59,7 @@ const DrawerHeaderStyles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: SPACING.l,
+    backgroundColor:COLORS.white
   },
   Title: {
     color:colors.black,
