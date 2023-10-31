@@ -10,7 +10,7 @@ import {Avatar} from 'react-native-paper';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
 import React, {useRef, useState} from 'react';
-import {COLORS} from '../../constants/theme';
+import {COLORS, SIZES} from '../../constants/theme';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormButton from '../../components/FormButton';
 import {ScrollView} from 'react-native-gesture-handler';
@@ -82,14 +82,16 @@ export default function EditProfileScreen() {
     }, 100);
   }
   return (
-    <BottomSheetModalProvider>
+    <BottomSheetModalProvider >
       <ScrollView
         contentContainerStyle={{
           backgroundColor: 'gray',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           backgroundColor: isOpen ? COLORS.gray2 : COLORS.white,
           paddingHorizontal: 20,
+          height:SIZES.height
+
         }}>
         <View style={{alignItems: 'center', marginVertical: 28}}>
           <View
@@ -102,7 +104,7 @@ export default function EditProfileScreen() {
               style={{
                 width: 150,
                 height: 150,
-                backgroundColor: 'white',
+                backgroundColor: COLORS.white,
                 justifyContent: 'center',
                 alignItems: 'center',
                 borderRadius: 999,
