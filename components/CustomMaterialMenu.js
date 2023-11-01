@@ -35,7 +35,9 @@ const CustomMaterialMenu = ({
 
   const hideMenu = () => setVisible(false);
 
-  const showMenu = () => setVisible(true);
+  const showMenu = () => {
+    // console.log('vertical menu pressed')
+    setVisible(true);}
   async function handleLogout() {
     try {
       await auth()
@@ -65,10 +67,10 @@ const CustomMaterialMenu = ({
         visible={visible}
         anchor={
           isIcon ? (
-            <TouchableOpacity onPress={showMenu}>
+            <TouchableOpacity onPress={()=>showMenu()}>
               <MaterialCommunityIcons
                 name={'dots-vertical'}
-                size={20}
+                size={24}
                 color={'black'}
               />
             </TouchableOpacity>

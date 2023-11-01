@@ -7,6 +7,7 @@ import ProfileStackNav from './ProfileStackNav';
 import LoadingAnalysisScreen from '../../screens/Home/LoadingAnalysisScreen';
 import resultsStackNav from './ResultsStackNav';
 import ResultsStackNav from './ResultsStackNav';
+import { Title } from 'react-native-paper';
 
 const AppStack = createNativeStackNavigator();
 
@@ -16,9 +17,9 @@ const AppStackNav = ({navigation}) => {
       <AppStack.Screen
         name="Home"
         options={{
-          header: ({navigation, route}) => (
-            <DrawerHeader route={route} navigation={navigation} />
-          ),
+         
+    headerTitle:'BlightBusters'
+         
         }}
         component={HomeScreen}
       />

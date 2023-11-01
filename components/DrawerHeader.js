@@ -1,31 +1,60 @@
 import {StyleSheet, Text, View, Image} from 'react-native';
-import React from 'react';
+import React ,{useState,useEffect}from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import {COLORS, SIZES, colors, sizes} from '../constants/theme';
+import {COLORS, colors, sizes} from '../constants/theme';
 import {Avatar, Title} from 'react-native-paper';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import CustomMaterialMenu from './CustomMaterialMenu';
 import { SPACING } from '../constants/theme';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../redux/slices/userSlice';
+import firestore from '@react-native-firebase/firestore';
 const DrawerHeader = ({navigation,route}) => {
   const {Container,Title} = DrawerHeaderStyles;
   const insets = useSafeAreaInsets();
+  const [userData, setUserData] = useState(null);
+  const [user, setUser] = useState(null);
+  const User = useSelector(selectUser);
+
+  // console.log('userww', user);
+  const getUser = async () => {
+    await firestore()
+      .collection('Users')
+      .doc(route.params ? route.params.userId : user.uid)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          // console.log('User Data', documentSnapshot.data());
+          setUserData(documentSnapshot.data());
+        }
+      });
+  };
+
+  useEffect(() => {
+      // this will make sure you only set id when userId
+      // is a valid value, and it won't reset it every
+      // serenader
+      if(User !==null && user !== User)
+      setUser(User);
+
+   if (user !== null)
+    getUser();
+  }, [user,User]);
+
+
   return (
     <SafeAreaView>
       <View style={[Container, {marginTop: insets.top,height:56}]}>
-      <View style={{flexDirection: 'row', marginRight: 10}}>
+         <View style={{flexDirection: 'row', marginRight: 10}}>
          
             <TouchableOpacity
               style={{paddingHorizontal: 10, marginTop: 5}}
               onPress={() => {
-                navigation.navigate('ProfileStack');
+              navigation.navigate('ProfileStack');
               }}>
               <Avatar.Image
-                source={require('../assets/images/131.png')}
+                 source={{uri: userData ? userData.userImg :'https://images.unsplash.com/photo-1698694326956-026c3f4c986b?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D'}}
                 size={30}
               />
             </TouchableOpacity>

@@ -99,8 +99,7 @@ const SignUpScreen = ({navigation}) => {
         .collection('Users')
         .doc(userid)
         .set({
-          fname: '',
-          lname: '',
+          username:'',
           phone: '',
           location:'',
           email: email,

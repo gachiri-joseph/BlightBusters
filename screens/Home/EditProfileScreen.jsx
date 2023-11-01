@@ -4,17 +4,24 @@ import {
   useWindowDimensions,
   View,
   Platform,
-  TouchableOpacity,
+  TouchableOpacity,Alert
 } from 'react-native';
-import {Avatar} from 'react-native-paper';
+import {Avatar,Title} from 'react-native-paper';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import ImagePicker from 'react-native-image-crop-picker';
-import React, {useRef, useState} from 'react';
+import React, {useRef, useState,useEffect} from 'react';
 import {COLORS, SIZES} from '../../constants/theme';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormButton from '../../components/FormButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import FormInput from '../../components/FormInput';
+
+
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import { useSelector } from 'react-redux';
+import { selectUser } from '../../redux/slices/userSlice';
+
 
 export default function EditProfileScreen() {
   const [darkmode, setDarkmode] = useState(false);
@@ -28,8 +35,113 @@ export default function EditProfileScreen() {
   const [fullName, setFullName] = useState('');
   const [location, setLocation] = useState('');
   const [number, setNumber] = useState('');
-  //   const {colors} = useTheme();
 
+
+
+  const [uploading, setUploading] = useState(false);
+  const [transferred, setTransferred] = useState(0);
+  const [userData, setUserData] = useState(null);
+  //   const {colors} = useTheme();
+  const user=useSelector(selectUser)
+  // console.log('user11',user)
+   
+
+ 
+///firebase///
+const getUser = async() => {
+  const currentUser = await firestore()
+  .collection('Users')
+  .doc(user.uid)
+  .get()
+  .then((documentSnapshot) => {
+    if( documentSnapshot.exists ) {
+      console.log('User Data', documentSnapshot.data());
+      setUserData(documentSnapshot.data());
+    }
+  }).catch(error => console.error(error));
+}
+//
+const handleUpdate = async() => {
+  let imgUrl = await uploadImage();
+
+  if( imgUrl == null && userData.userImg ) {
+    imgUrl = userData.userImg;
+  }
+
+  firestore()
+  .collection('Users')
+  .doc(user.uid)
+  .update({
+    username: userData.username,
+    phone: userData.phone,
+    location: userData.location,
+    userImg: imgUrl,
+  })
+  .then(() => {
+    console.log('User Updated!');
+    Alert.alert(
+      'Profile Updated!',
+      'Your profile has been updated successfully.'
+    );
+  })
+}
+
+const uploadImage = async () => {
+  if( image == null ) {
+    return null;
+  }
+  const uploadUri = image;
+  let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+  // Add timestamp to File Name
+  const extension = filename.split('.').pop(); 
+  const name = filename.split('.').slice(0, -1).join('.');
+  filename = name + Date.now() + '.' + extension;
+
+  setUploading(true);
+  setTransferred(0);
+
+  const storageRef = storage().ref(`photos/${filename}`);
+  const task = storageRef.putFile(uploadUri);
+
+  // Set transferred state
+  task.on('state_changed', (taskSnapshot) => {
+    console.log(
+      `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+    );
+
+    setTransferred(
+      Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+        100,
+    );
+  });
+
+  try {
+    await task;
+
+    const url = await storageRef.getDownloadURL();
+
+    setUploading(false);
+    setImage(null);
+
+    // Alert.alert(
+    //   'Image uploaded!',
+    //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+    // );
+    return url;
+
+  } catch (e) {
+    console.log(e);
+    return null;
+  }
+
+};
+//
+useEffect(() => {
+  getUser();
+}, []);
+//
+//////
   const takePhotoFromCamera = () => {
     ImagePicker.openCamera({
       compressImageMaxWidth: 300,
@@ -113,7 +225,14 @@ export default function EditProfileScreen() {
                 <Avatar.Image source={{uri: image}} size={140} />
               ) : (
                 <Avatar.Image
-                  source={require('../../assets/images/135.png')}
+                  source={{
+                    uri: image
+                      ? image
+                      : userData
+                      ? userData.userImg ||
+                        'https://images.unsplash.com/photo-1698694326956-026c3f4c986b?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D'
+                      : 'https://images.unsplash.com/photo-1696790427681-9c2b5be742db?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzOHx8fGVufDB8fHx8fA%3D%3D',
+                  }}
                   size={140}
                 />
               )}
@@ -135,31 +254,43 @@ export default function EditProfileScreen() {
             </TouchableOpacity>
           </View>
         </View>
-
-        <FormInput
-          labelValue={email}
-          onChangeText={userEmail => setEmail(userEmail)}
+        {/* <View style={{ marginLeft: 20 }}>
+            <Title style={[styles.title, {
+              marginTop: 15,
+              marginBottom: 5,
+            }]}>   {userData ? userData.username : ''}</Title>
+        
+          </View> */}
+      
+        {/* <FormInput
+          
+          // labelValue={email}
+          // onChangeText={userEmail => setEmail(userEmail)}
           placeholderText="Change your email"
           iconType="email"
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry={false}
-        />
+        /> */}
 
         <FormInput
-          labelValue={fullName}
-          onChangeText={userName => setFullName(userName)}
-          placeholderText="change your username"
+           labelValue={userData ? userData.username : ''}
+           onChangeText={(txt) => setUserData({...userData, username: txt})}
+          // labelValue={fullName}
+          // onChangeText={userName => setFullName(userName)}
+          placeholderText="user"
           iconType="person"
           autoCapitalize="none"
           autoCorrect={false}
           secureTextEntry={false}
         />
         <FormInput
-          labelValue={number}
-          onChangeText={userNumber => setNumber(userNumber)}
-          placeholderText="change your number"
+          labelValue={userData ? userData.phone : ''}
+          onChangeText={(txt) => setUserData({...userData, phone: txt})}
+          // labelValue={number}
+          // onChangeText={userNumber => setNumber(userNumber)}
+          placeholderText="0712345678"
           iconType="phone"
           keyboardType="number-pad"
           autoCapitalize="none"
@@ -167,16 +298,18 @@ export default function EditProfileScreen() {
           secureTextEntry={false}
         />
         <FormInput
-          labelValue={location}
-          onChangeText={userLocation => setLocation(userLocation)}
-          placeholderText="change your location"
+          value={userData ? userData.location : ''}
+          onChangeText={(txt) => setUserData({...userData, location: txt})}
+          // labelValue={location}
+          // onChangeText={userLocation => setLocation(userLocation)}
+          placeholderText="user location"
           iconType="location-on"
           autoCapitalize='words'
           autoCorrect={false}
           secureTextEntry={false}
         />
 
-        <FormButton title="Save" onPress={() => {}} />
+        <FormButton title="Save" onPress={handleUpdate} />
 
         <BottomSheetModal
           ref={bottomSheetModalRef}
