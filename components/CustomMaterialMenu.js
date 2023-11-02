@@ -106,6 +106,7 @@ const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
           style={{
             color: COLORS.white,
             display: 'flex',
+            borderRadius: 15,
           }}>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
@@ -139,6 +140,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingHorizontal: 15,
+    borderRadius: 15,
   },
   row: {
     flex: 1,

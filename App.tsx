@@ -15,9 +15,11 @@ export default function App() {
         <FlashMessage
           position="top"
           animated
+          floating={true}
           statusBarHeight={30}
           titleStyle={{fontFamily: 'InterSoftMedium', fontSize: 16}}
           duration={2000}
+          style={{height:100}}
         />
       </Provider>
     </GestureHandlerRootView>

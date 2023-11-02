@@ -55,16 +55,14 @@ const LoginScreen = ({navigation}) => {
           // setIsLoggedIn(true);
         })
         .catch(error => {
-          if (
-            error.code === 'auth/wrong-password' ||
-            error.code === 'auth/user-not-found'
-          ) {
-            showMessage({
-              message: 'invalid credentials, try again!',
-              type: 'danger',
-              icon: 'danger',
-            });
-          }
+          // error.code === 'auth/wrong-password' ||
+          // error.code === 'auth/user-not-found'
+
+          showMessage({
+            message: 'invalid credentials, try again!',
+            type: 'danger',
+            icon: 'danger',
+          });
         })
         .finally(() => {
           setEmail('');

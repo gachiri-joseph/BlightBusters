@@ -217,9 +217,8 @@ export default function EditProfileScreen() {
     let isCameraPermitted = await requestCameraPermission();
     // let isStoragePermitted = await requestExternalWritePermission();
     if (isCameraPermitted) {
-
       try {
-        await ImagePicker.launchCamera(options,response => {
+        await ImagePicker.launchCamera(options, response => {
           if (response.didCancel) {
             console.log('User cancelled image picker');
           } else if (response.error) {
@@ -233,7 +232,8 @@ export default function EditProfileScreen() {
       } catch (err) {
         console.log(err);
       }
-  }};
+    }
+  };
   const choosePhotoFromLibrary = async () => {
     let options = {
       mediaType: 'photo',
