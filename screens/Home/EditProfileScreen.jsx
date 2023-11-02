@@ -4,24 +4,26 @@ import {
   useWindowDimensions,
   View,
   Platform,
-  TouchableOpacity,Alert
+  TouchableOpacity,
+  Alert,
+  PermissionsAndroid,
 } from 'react-native';
-import {Avatar,Title} from 'react-native-paper';
+import {Avatar, Title} from 'react-native-paper';
 import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
-import ImagePicker from 'react-native-image-crop-picker';
-import React, {useRef, useState,useEffect} from 'react';
+import * as ImagePicker from 'react-native-image-picker';
+import React, {useRef, useState, useEffect} from 'react';
 import {COLORS, SIZES} from '../../constants/theme';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FormButton from '../../components/FormButton';
 import {ScrollView} from 'react-native-gesture-handler';
 import FormInput from '../../components/FormInput';
-
+import {showMessage} from 'react-native-flash-message';
 
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import { useSelector } from 'react-redux';
-import { selectUser } from '../../redux/slices/userSlice';
-
+import {useSelector} from 'react-redux';
+import {selectUser} from '../../redux/slices/userSlice';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export default function EditProfileScreen() {
   const [darkmode, setDarkmode] = useState(false);
@@ -31,151 +33,224 @@ export default function EditProfileScreen() {
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(null);
 
-  const [email, setEmail] = useState('');
-  const [fullName, setFullName] = useState('');
-  const [location, setLocation] = useState('');
-  const [number, setNumber] = useState('');
-
-
-
   const [uploading, setUploading] = useState(false);
   const [transferred, setTransferred] = useState(0);
   const [userData, setUserData] = useState(null);
+  const [updated, setUpdated] = useState(false);
   //   const {colors} = useTheme();
-  const user=useSelector(selectUser)
+  const user = useSelector(selectUser);
   // console.log('user11',user)
-   
 
- 
-///firebase///
-const getUser = async() => {
-  const currentUser = await firestore()
-  .collection('Users')
-  .doc(user.uid)
-  .get()
-  .then((documentSnapshot) => {
-    if( documentSnapshot.exists ) {
-      console.log('User Data', documentSnapshot.data());
-      setUserData(documentSnapshot.data());
-    }
-  }).catch(error => console.error(error));
-}
-//
-const handleUpdate = async() => {
-  let imgUrl = await uploadImage();
-
-  if( imgUrl == null && userData.userImg ) {
-    imgUrl = userData.userImg;
-  }
-
-  firestore()
-  .collection('Users')
-  .doc(user.uid)
-  .update({
-    username: userData.username,
-    phone: userData.phone,
-    location: userData.location,
-    userImg: imgUrl,
-  })
-  .then(() => {
-    console.log('User Updated!');
-    Alert.alert(
-      'Profile Updated!',
-      'Your profile has been updated successfully.'
-    );
-  })
-}
-
-const uploadImage = async () => {
-  if( image == null ) {
-    return null;
-  }
-  const uploadUri = image;
-  let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
-
-  // Add timestamp to File Name
-  const extension = filename.split('.').pop(); 
-  const name = filename.split('.').slice(0, -1).join('.');
-  filename = name + Date.now() + '.' + extension;
-
-  setUploading(true);
-  setTransferred(0);
-
-  const storageRef = storage().ref(`photos/${filename}`);
-  const task = storageRef.putFile(uploadUri);
-
-  // Set transferred state
-  task.on('state_changed', (taskSnapshot) => {
-    console.log(
-      `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-    );
-
-    setTransferred(
-      Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
-        100,
-    );
-  });
-
-  try {
-    await task;
-
-    const url = await storageRef.getDownloadURL();
-
-    setUploading(false);
-    setImage(null);
-
-    // Alert.alert(
-    //   'Image uploaded!',
-    //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
-    // );
-    return url;
-
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-
-};
-//
-useEffect(() => {
-  getUser();
-}, []);
-//
-//////
-  const takePhotoFromCamera = () => {
-    ImagePicker.openCamera({
-      compressImageMaxWidth: 300,
-      compressImageMaxHeight: 300,
-      cropping: true,
-      compressImageQuality: 0.7,
-    })
-      .then(image => {
-        console.log(image);
-        setImage(image.path);
-        //   bs.current.snapTo(1);
+  ///firebase///
+  const getUser = async () => {
+    const currentUser = await firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          // console.log('User Data', documentSnapshot.data());
+          setUserData(documentSnapshot.data());
+        }
+        setUpdated(false);
       })
-      .catch(err => {
-        console.log(err);
-        return err;
+      .catch(error => console.error(error));
+  };
+  //
+  const handleUpdate = async () => {
+    let imgUrl = await uploadImage();
+
+    if (imgUrl == null && userData.userImg) {
+      imgUrl = userData.userImg;
+    }
+
+    firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .update({
+        username: userData.username,
+        phone: userData.phone,
+        location: userData.location,
+        userImg: imgUrl,
+      })
+      .then(() => {
+        console.log('User Updated!');
+        setUpdated(true);
+        // Alert.alert(
+        //   'Profile Updated!',
+        //   'Your profile has been updated successfully.',
+        // );
+        showMessage({
+          message: 'Your profile has been updated successfully!',
+          type: 'success',
+          icon: 'success',
+        });
       });
   };
 
-  const choosePhotoFromLibrary = () => {
-    ImagePicker.openPicker({
-      width: 300,
-      height: 300,
-      cropping: true,
-      compressImageQuality: 0.7,
-    })
-      .then(image => {
-        console.log(image);
-        setImage(image.path);
-        //   bs.current.snapTo(1);
-      })
-      .catch(err => {
+  const uploadImage = async () => {
+    if (image == null) {
+      return null;
+    }
+    const uploadUri = image;
+    let filename = uploadUri.substring(uploadUri.lastIndexOf('/') + 1);
+
+    // Add timestamp to File Name
+    const extension = filename.split('.').pop();
+    const name = filename.split('.').slice(0, -1).join('.');
+    filename = name + Date.now() + '.' + extension;
+
+    setUploading(true);
+    setTransferred(0);
+
+    const storageRef = storage().ref(`photos/${filename}`);
+    const task = storageRef.putFile(uploadUri);
+
+    // Set transferred state
+    task.on('state_changed', taskSnapshot => {
+      console.log(
+        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      );
+
+      setTransferred(
+        Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
+          100,
+      );
+    });
+
+    try {
+      await task;
+
+      const url = await storageRef.getDownloadURL();
+
+      setUploading(false);
+      setImage(null);
+
+      // Alert.alert(
+      //   'Image uploaded!',
+      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
+      // );
+      return url;
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  };
+  //
+  useEffect(() => {
+    getUser();
+  }, [updated]);
+  //
+  //////
+  // const takePhotoFromCamera = () => {
+  //   ImagePicker.openCamera({
+  //     compressImageMaxWidth: 300,
+  //     compressImageMaxHeight: 300,
+  //     cropping: true,
+  //     compressImageQuality: 0.7,
+  //     cropperActiveWidgetColor:COLORS.primary,
+  //     // showCropFrame:false,
+  //     // hideBottomControls:true,
+  //     // enableRotationGesture:true,
+  //     // cropperToolbarColor:'pink',//not working
+  //     cropperStatusBarColor:'white',
+  //     // freeStyleCropEnabled:true
+  //   })
+  //     .then(image => {
+  //       console.log(image);
+  //       setImage(image.path);
+  //       bottomSheetModalRef.current?.dismiss();
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       return err;
+  //     });
+  // };
+
+  // const choosePhotoFromLibrary = () => {
+  //   ImagePicker.openPicker({
+  //     width: 300,
+  //     height: 300,
+  //     cropping: true,
+  //     compressImageQuality: 0.7,
+  //   })
+  //     .then(image => {
+  //       console.log(image);
+  //       setImage(image.path);
+  //       bottomSheetModalRef.current?.dismiss();
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //       return err;
+  //     });
+  // };
+
+  //////image picker
+
+  const requestCameraPermission = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.CAMERA,
+          {
+            title: 'Camera Permission',
+            message: 'App needs camera permission',
+          },
+        );
+        // If CAMERA Permission is granted
+        return granted === PermissionsAndroid.RESULTS.GRANTED;
+      } catch (err) {
+        console.warn(err);
+        return false;
+      }
+    } else return true;
+  };
+
+  const takePhotoFromCamera = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+      saveToPhotos: true,
+    };
+    let isCameraPermitted = await requestCameraPermission();
+    // let isStoragePermitted = await requestExternalWritePermission();
+    if (isCameraPermitted) {
+
+      try {
+        await ImagePicker.launchCamera(options,response => {
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('Image picker error: ', response.error);
+          } else {
+            // let imageUri = response.uri || response.assets?.[0]?.uri;
+            setImage(response.assets[0].uri);
+          }
+          bottomSheetModalRef.current?.dismiss();
+        });
+      } catch (err) {
         console.log(err);
-        return err;
+      }
+  }};
+  const choosePhotoFromLibrary = async () => {
+    let options = {
+      mediaType: 'photo',
+      maxWidth: 300,
+      maxHeight: 550,
+      quality: 1,
+    };
+    try {
+      await ImagePicker.launchImageLibrary(options, result => {
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }
+        bottomSheetModalRef.current?.dismiss();
       });
+    } catch (err) {
+      console.log(err);
+    }
   };
   const bottomSheetModalRef = useRef(null);
 
@@ -194,7 +269,7 @@ useEffect(() => {
     }, 100);
   }
   return (
-    <BottomSheetModalProvider >
+    <BottomSheetModalProvider>
       <ScrollView
         contentContainerStyle={{
           backgroundColor: 'gray',
@@ -202,8 +277,7 @@ useEffect(() => {
           justifyContent: 'flex-start',
           backgroundColor: isOpen ? COLORS.gray2 : COLORS.white,
           paddingHorizontal: 20,
-          height:SIZES.height
-
+          height: SIZES.height,
         }}>
         <View style={{alignItems: 'center', marginVertical: 28}}>
           <View
@@ -221,20 +295,26 @@ useEffect(() => {
                 alignItems: 'center',
                 borderRadius: 999,
               }}>
-              {image ? (
-                <Avatar.Image source={{uri: image}} size={140} />
-              ) : (
+              {/* {image && <Avatar.Image source={{uri:image }} size={140} />} */}
+              {userData?.userImg || image ? (
                 <Avatar.Image
                   source={{
-                    uri: image
-                      ? image
-                      : userData
-                      ? userData.userImg ||
-                        'https://images.unsplash.com/photo-1698694326956-026c3f4c986b?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D'
-                      : 'https://images.unsplash.com/photo-1696790427681-9c2b5be742db?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwzOHx8fGVufDB8fHx8fA%3D%3D',
+                    uri: image ? image : userData.userImg,
                   }}
                   size={140}
                 />
+              ) : (
+                <View
+                  style={{
+                    backgroundColor: 'lightgrey',
+                    width: 140,
+                    height: 140,
+                    borderRadius: 999,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}>
+                  <FontAwesome6 name={'user'} color={'black'} size={50} />
+                </View>
               )}
             </View>
             <TouchableOpacity onPress={handlePresentModal}>
@@ -261,7 +341,7 @@ useEffect(() => {
             }]}>   {userData ? userData.username : ''}</Title>
         
           </View> */}
-      
+
         {/* <FormInput
           
           // labelValue={email}
@@ -275,10 +355,8 @@ useEffect(() => {
         /> */}
 
         <FormInput
-           labelValue={userData ? userData.username : ''}
-           onChangeText={(txt) => setUserData({...userData, username: txt})}
-          // labelValue={fullName}
-          // onChangeText={userName => setFullName(userName)}
+          labelValue={userData ? userData.username : ''}
+          onChangeText={txt => setUserData({...userData, username: txt})}
           placeholderText="user"
           iconType="person"
           autoCapitalize="none"
@@ -287,9 +365,7 @@ useEffect(() => {
         />
         <FormInput
           labelValue={userData ? userData.phone : ''}
-          onChangeText={(txt) => setUserData({...userData, phone: txt})}
-          // labelValue={number}
-          // onChangeText={userNumber => setNumber(userNumber)}
+          onChangeText={txt => setUserData({...userData, phone: txt})}
           placeholderText="0712345678"
           iconType="phone"
           keyboardType="number-pad"
@@ -299,12 +375,10 @@ useEffect(() => {
         />
         <FormInput
           value={userData ? userData.location : ''}
-          onChangeText={(txt) => setUserData({...userData, location: txt})}
-          // labelValue={location}
-          // onChangeText={userLocation => setLocation(userLocation)}
+          onChangeText={txt => setUserData({...userData, location: txt})}
           placeholderText="user location"
           iconType="location-on"
-          autoCapitalize='words'
+          autoCapitalize="words"
           autoCorrect={false}
           secureTextEntry={false}
         />
@@ -329,7 +403,7 @@ useEffect(() => {
               title="Choose From Library"
               onPress={choosePhotoFromLibrary}
             />
-            <FormButton title="Cancel" onPress={handleDismissModal} />
+            <FormButton title="Close" onPress={handleDismissModal} />
           </View>
         </BottomSheetModal>
       </ScrollView>

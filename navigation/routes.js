@@ -20,7 +20,7 @@ const Routes = () => {
     const redirect = auth().onAuthStateChanged(user => {
       if (user) {
         dispatch(setUser(user));
-        console.log(user);
+        // console.log(user);
         isUser(true);
         dispatch(setloading(false));
       } else {

@@ -1,31 +1,55 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {useIsFocused} from '@react-navigation/native';
 import {
   View,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   Switch,
+  ActivityIndicator,
 } from 'react-native';
 import {Avatar, Title, Text} from 'react-native-paper';
 import {COLORS} from '../../constants/theme';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Feather from 'react-native-vector-icons/Feather';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import InputContainer from '../../components/InputContainer';
 import {showMessage} from 'react-native-flash-message';
 import auth from '@react-native-firebase/auth';
 import FormButton from '../../components/FormButton';
+import {useSelector} from 'react-redux';
+import {selectUser} from '../../redux/slices/userSlice';
+import firestore from '@react-native-firebase/firestore';
 
+const ProfileScreen = ({navigation}) => {
+  const user = useSelector(selectUser);
+  const isFocused = useIsFocused();
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const getUser = async () => {
+    console.log('getting data');
+    await firestore()
+      .collection('Users')
+      .doc(user.uid)
+      .get()
+      .then(documentSnapshot => {
+        if (documentSnapshot.exists) {
+          setUserData(documentSnapshot.data());
+          setLoading(false);
+        }
+      });
+  };
 
-const ProfileScreen = ({navigation, route}) => {
-  // const dispatch=useDispatch()
-//  const userData=route.params.user
-console.log('params',route.params)
+  useEffect(() => {
+    // console.log('getting user')
+    if (user) getUser();
+  }, [user, isFocused]);
+
   async function handleLogout() {
     try {
       await auth()
         .signOut()
         .then(() => console.log('User signed out!'));
-    } catch(e) {
+    } catch (e) {
       showMessage({
         message: 'failed to log out!',
         type: 'danger',
@@ -33,50 +57,84 @@ console.log('params',route.params)
       });
     }
   }
-  return (<></>
-    // <ScrollView style={styles.container}>
-    //   <View style={styles.topUserInfoSection}>
-    //     <View
-    //       style={{
-    //         flexDirection: 'column',
-    //         marginTop: 15,
-    //         justifyContent: 'flex-start',
-    //         alignItems: 'center',
-    //       }}>
-    //       <Avatar.Image
-    //        source={{uri: userData ? userData.userImg :'https://images.unsplash.com/photo-1698694326956-026c3f4c986b?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D'}}
-    //         size={140}
-    //       />
-    //       <View style={{marginLeft: 20}}>
-    //         <Title
-    //           style={[
-    //             styles.title,
-    //             {
-    //               marginTop: 15,
-    //               marginBottom: 5,
-    //             },
-    //           ]}>
-    //        hello there, {userData ? userData.username || 'User' : 'User'} 
-    //         </Title>
-    //       </View>
-    //     </View>
-    //   </View>
 
-    //   <View style={styles.userInfoSection}>
-    //     <InputContainer iconType={'user'} placeholder={userData ? userData.username || 'User' : 'User'}  />
-    //     <InputContainer iconType={'phone'} placeholder={userData ? userData.phone || '0712345678' : '0712345678'} />
-    //     <InputContainer
-    //       iconType={'envelope'}
-    //       placeholder={userData ? userData.email || 'User@email.com' : 'User@email.com'} 
-    //     />
-    //     <InputContainer
-    //       iconType={'location-dot'}
-    //       placeholder={userData ? userData.location || 'User location' : 'User location'} 
-    //     />
-    //     <FormButton title="log out" onPress={handleLogout} />
-    //     <FormButton title="Delete Account" onPress={() => {}} />
-    //   </View>
-    // </ScrollView>
+  if (loading) {
+    <View  style={{
+      flex:1,
+      backgroundColor:COLORS.white,
+      justifyContent: 'center',
+      alignItems: 'center',
+    }} >
+      <ActivityIndicator color={COLORS.primary} size={'large'}/>
+    </View>
+  }
+
+  return (
+    <ScrollView style={styles.container}>
+      <View style={styles.topUserInfoSection}>
+        <View
+          style={{
+            flexDirection: 'column',
+            marginTop: 15,
+            justifyContent: 'flex-start',
+            alignItems: 'center',
+          }}>
+          {userData?.userImg ? (
+            <Avatar.Image source={{uri: userData.userImg}} size={140} />
+          ) : (
+            <View
+              style={{
+                backgroundColor: 'lightgrey',
+                width: 140,
+                height: 140,
+                borderRadius: 999,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <FontAwesome6 name={'user'} color={'black'} size={50} />
+            </View>
+          )}
+
+          <View style={{marginLeft: 20}}>
+            <Title
+              style={[
+                styles.title,
+                {
+                  marginTop: 15,
+                  marginBottom: 5,
+                },
+              ]}>
+              hello there, {userData ? userData.username || 'User' : 'User'}
+            </Title>
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.userInfoSection}>
+        <InputContainer
+          iconType={'user'}
+          placeholder={userData ? userData.username || 'User' : 'User'}
+        />
+        <InputContainer
+          iconType={'phone'}
+          placeholder={userData ? userData.phone || '0712345678' : '0712345678'}
+        />
+        <InputContainer
+          iconType={'envelope'}
+          placeholder={
+            userData ? userData.email || 'User@email.com' : 'User@email.com'
+          }
+        />
+        <InputContainer
+          iconType={'location-dot'}
+          placeholder={
+            userData ? userData.location || 'User location' : 'User location'
+          }
+        />
+        <FormButton title="log out" onPress={handleLogout} />
+        <FormButton title="Delete Account" onPress={() => {}} />
+      </View>
+    </ScrollView>
   );
 };
 

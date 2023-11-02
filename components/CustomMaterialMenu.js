@@ -1,63 +1,29 @@
 import 'react-native-gesture-handler';
 import React, {useState} from 'react';
-//import react in our code.
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  Pressable,
-  StyleSheet,
-  Switch,
-  useWindowDimensions,
-} from 'react-native';
-//import all the components we are going to use.
+import {View, Text, TouchableOpacity, StyleSheet, Switch} from 'react-native';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
-//import menu and menu item
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS} from '../constants/theme';
-import auth from '@react-native-firebase/auth';
-import {showMessage} from 'react-native-flash-message';
-import Feather from 'react-native-vector-icons/Feather';
-const CustomMaterialMenu = ({
-  isIcon,
-  menuText,
-  textStyle,
-  route,
-  navigation,
-}) => {
+
+const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
   const [darkmode, setDarkmode] = useState(false);
   const [notifications, setNotifications] = useState(false);
-  const {width} = useWindowDimensions();
   const [theme, setTheme] = useState('dim');
-  const [isOpen, setIsOpen] = useState(false);
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
 
   const showMenu = () => {
     // console.log('vertical menu pressed')
-    setVisible(true);}
-  async function handleLogout() {
-    try {
-      await auth()
-        .signOut()
-        .then(() => console.log('User signed out!'));
-    } catch (e) {
-      showMessage({
-        message: 'failed to log out!',
-        type: 'danger',
-        icon: 'danger',
-      });
-    }
-  }
+    setVisible(true);
+  };
   return (
     <View>
       <Menu
         style={{
           position: 'absolute',
           top: 56,
-          left:355,
+          left: 355,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
@@ -67,7 +33,7 @@ const CustomMaterialMenu = ({
         visible={visible}
         anchor={
           isIcon ? (
-            <TouchableOpacity onPress={()=>showMenu()}>
+            <TouchableOpacity onPress={() => showMenu()}>
               <MaterialCommunityIcons
                 name={'dots-vertical'}
                 size={24}
@@ -92,13 +58,10 @@ const CustomMaterialMenu = ({
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Dark mode</Text>
-              <Switch
-                style={{marginLeft: 'auto'}}
-                trackColor={{false: '#767577', true: '#81b0ff'}}
-                thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onChange={() => setDarkmode(!darkmode)}
-                value={darkmode}
+              <MaterialCommunityIcons
+                name={'theme-light-dark'}
+                size={24}
+                color={COLORS.primary}
               />
             </View>
           </View>
@@ -109,20 +72,14 @@ const CustomMaterialMenu = ({
             width: '100%',
             color: COLORS.white,
             display: 'flex',
-            // backgroundColor: COLORS.black,
-            // justifyContent: 'center',
-            // alignItems: 'center',
           }}>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Enable notifications</Text>
-              <Switch
-                style={{marginLeft: 'auto'}}
-                trackColor={{false: '#767577', true: '#81b0ff'}}
-                thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                value={notifications}
-                onChange={() => setNotifications(!notifications)}
+              <MaterialCommunityIcons
+                name={'bell'}
+                size={24}
+                color={COLORS.primary}
               />
             </View>
           </View>
@@ -132,71 +89,44 @@ const CustomMaterialMenu = ({
           style={{
             color: COLORS.white,
             display: 'flex',
-            // backgroundColor: COLORS.black,
-            // justifyContent: 'center',
-            // alignItems: 'center',
           }}>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Terms of use</Text>
-              <Switch
-                style={{marginLeft: 'auto'}}
-                trackColor={{false: '#767577', true: '#81b0ff'}}
-                thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
-                ios_backgroundColor="#3e3e3e"
-                onChange={() => setDarkmode(!darkmode)}
-                value={darkmode}
+              <MaterialCommunityIcons
+                name={'note-text'}
+                size={24}
+                color={COLORS.primary}
               />
             </View>
           </View>
         </MenuItem>
-        <MenuDivider/>
+        <MenuDivider />
         <MenuItem
           style={{
             color: COLORS.white,
             display: 'flex',
-            // backgroundColor: COLORS.black,
-            // justifyContent: 'center',
-            // alignItems: 'center',
           }}>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Privacy policy</Text>
-              <Switch
+
+              <MaterialCommunityIcons
+                name={'lock'}
+                size={24}
+                color={COLORS.primary}
+              />
+              {/* <Switch
                 style={{marginLeft: 'auto'}}
                 trackColor={{false: '#767577', true: '#81b0ff'}}
                 thumbColor={darkmode ? '#f5dd4b' : '#f4f3f4'}
                 ios_backgroundColor="#3e3e3e"
                 onChange={() => setDarkmode(!darkmode)}
                 value={darkmode}
-              />
+              /> */}
             </View>
           </View>
         </MenuItem>
-        {/* <MenuDivider/>
-        <MenuItem
-          style={{
-            color: COLORS.white,
-            display: 'flex',
-            // backgroundColor: COLORS.black,
-            // justifyContent: 'center',
-            // alignItems: 'center',
-          }}>
-          <View style={styles.contentContainer}>
-            <TouchableOpacity>
-              <View style={styles.row}>
-                <Text style={styles.subtitle}>Logout</Text>
-                <Feather
-                  style={{marginLeft: 'auto'}}
-                  name="log-out"
-                  color={COLORS.black}
-                  size={20}
-                  onPress={handleLogout}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-        </MenuItem> */}
       </Menu>
     </View>
   );
@@ -207,7 +137,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     width: 200,
     flex: 1,
-    // backgroundColor: 'gray',
     alignItems: 'center',
     paddingHorizontal: 15,
   },
@@ -216,9 +145,8 @@ const styles = StyleSheet.create({
     width: 200,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     marginVertical: 10,
-    // backgroundColor:'black'
   },
   subtitle: {
     color: 'black',

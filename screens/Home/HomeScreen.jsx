@@ -1,5 +1,11 @@
-import React, {useState, useLayoutEffect} from 'react';
-import {View, StyleSheet, ScrollView, TouchableOpacity} from 'react-native';
+import React, {useState, useLayoutEffect, useCallback, useEffect} from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import {PLACES, TOP_PLACES} from '../../assets/data';
 import ScreenHeader from '../../components/ScreenHeader';
 import TopPlacesCarousel from '../../components/TopPlacesCarousel';
@@ -11,41 +17,44 @@ import CustomMaterialMenu from '../../components/CustomMaterialMenu';
 import {Avatar, Title} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {selectUser} from '../../redux/slices/userSlice';
-import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import {useIsFocused} from '@react-navigation/native';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
+import CameraModalScreen from './CameraModalScreen';
 const HomeScreen = ({navigation, route}) => {
-  // const [isModalVisible, setIsModalVisible] = useState(false);
-  // const onModalClose = () => {
-  //   setIsModalVisible(false);
-  // };
   const [userData, setUserData] = useState(null);
-  // const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
   const user = useSelector(selectUser);
-  // console.log(user)
-  const getUser = async user => {
+  // console.log('userrrrrrr',user)
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const getUser = useCallback(async () => {
+    // console.log('getting data')
     await firestore()
       .collection('Users')
       .doc(route.params ? route.params.userId : user.uid)
       .get()
       .then(documentSnapshot => {
         if (documentSnapshot.exists) {
-          console.log('User Data', documentSnapshot.data());
           setUserData(documentSnapshot.data());
+          setLoading(false);
         }
       });
+  });
+  const openModal = () => {
+    setIsModalVisible(true);
   };
+  const onModalClose = () => {
+    setIsModalVisible(false);
+  };
+  useEffect(() => {
+    // console.log('getting user')
+    if (user) getUser();
+    setLoading(false);
+  }, [user, isFocused]);
 
   useLayoutEffect(() => {
-    console.log('me first');
-    // auth().onAuthStateChanged(user => {
-    //   if (user) {
-    //     getUser(user);
-    //   } else {
-    //     console.log('error');
-    //   }
-    // });
-
-    // getUser()
+    // console.log('me first');
     navigation.setOptions({
       headerRight: () => (
         <CustomMaterialMenu
@@ -63,19 +72,46 @@ const HomeScreen = ({navigation, route}) => {
             onPress={() => {
               navigation.navigate('ProfileStack');
             }}>
-            <Avatar.Image
-              source={{
-                uri: userData
-                  ? userData.userImg
-                  : 'https://images.unsplash.com/photo-1698694326956-026c3f4c986b?auto=format&fit=crop&q=60&w=500&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwyMnx8fGVufDB8fHx8fA%3D%3D',
-              }}
-              size={30}
-            />
+            {userData?.userImg ? (
+              <Avatar.Image
+                source={{
+                  uri: userData.userImg,
+                }}
+                size={30}
+              />
+            ) : (
+              <View
+                style={{
+                  backgroundColor: 'lightgrey',
+                  width: 30,
+                  height: 30,
+                  borderRadius: 999,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <FontAwesome6 name={'user'} color={'black'} size={20} />
+              </View>
+            )}
           </TouchableOpacity>
         </View>
       ),
     });
-  }, [navigation]);
+  }, [userData]);
+
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: COLORS.white,
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <ActivityIndicator color={COLORS.primary} size={'large'} />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       {/* <ScreenHeader mainTitle="welcome to blightbusters" secondTitle="Getting started" />  */}
@@ -95,12 +131,8 @@ const HomeScreen = ({navigation, route}) => {
         />
         <TripsList list={PLACES} navigation={navigation} />
       </ScrollView>
-      {/* <CameraModalScreen isVisible={isModalVisible} onClose={onModalClose}  /> */}
-      <FAB
-        icon="leaf"
-        style={styles.fab}
-        onPress={() => navigation.navigate('Camera')}
-      />
+      <CameraModalScreen isVisible={isModalVisible} onClose={onModalClose} />
+      <FAB icon="leaf" style={styles.fab} onPress={() => openModal()} />
     </View>
   );
 };
