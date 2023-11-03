@@ -1,7 +1,6 @@
 import React from 'react';
 import {Image, View, StyleSheet, TouchableOpacity, Text} from 'react-native';
 import {colors, shadow, sizes, SPACING} from '../constants/theme';
-import FavoriteButton from './FavoriteButton';
 
 const CARD_WIDTH = sizes.width / 2 - (SPACING.l + SPACING.l / 2);
 const CARD_HEIGHT = 220;

@@ -12,9 +12,9 @@ import TopPlacesCarousel from '../../components/TopPlacesCarousel';
 import SectionHeader from '../../components/SectionHeader';
 import TripsList from '../../components/TripsList';
 import {COLORS, colors} from '../../constants/theme';
-import {FAB} from 'react-native-paper';
+import {FAB, useTheme} from 'react-native-paper';
 import CustomMaterialMenu from '../../components/CustomMaterialMenu';
-import {Avatar, Title} from 'react-native-paper';
+import {Avatar} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {selectUser} from '../../redux/slices/userSlice';
 import firestore from '@react-native-firebase/firestore';
@@ -22,6 +22,11 @@ import {useIsFocused} from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import CameraModalScreen from './CameraModalScreen';
 const HomeScreen = ({navigation, route}) => {
+
+
+
+  const theme=useTheme()
+  
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const isFocused = useIsFocused();
@@ -65,6 +70,7 @@ const HomeScreen = ({navigation, route}) => {
           isIcon={true}
         />
       ),
+      
       headerLeft: () => (
         <View style={{flexDirection: 'row', marginRight: 10}}>
           <TouchableOpacity

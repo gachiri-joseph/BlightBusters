@@ -4,8 +4,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import OnBoardingScreen from '../../screens/Home/OnBoardingScreen';
 import SignUpScreen from '../../screens/Auth/SignUpScreen';
 import LoginScreen from '../../screens/Auth/LoginScreen';
-// import PhoneLoginScreen from '../../screens/auth/PhoneLoginScreen';
-// import PhoneSignUpScreen from '../../screens/auth/PhoneSignUpScreen';
 import ForgetPasswordScreen from '../../screens/Auth/ForgetPasswordScreen';
 const NativeStack = createNativeStackNavigator();
 

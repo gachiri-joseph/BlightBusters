@@ -1,9 +1,4 @@
-// Example of Image Picker in React Native
-// https://aboutreact.com/example-of-image-picker-in-react-native/
-// https://www.androidcentral.com/what-scoped-storage
-// Import React
 import React, {useState} from 'react';
-// Import required components
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,12 +10,10 @@ import {
   PermissionsAndroid,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-// Import Image Picker
-// import ImagePicker from 'react-native-image-picker';
 import * as ImagePicker from 'react-native-image-picker';
 import FormButton from '../../components/FormButton';
 const ModalScreen = ({navigation}) => {
-  // const [filePath, setFilePath] = useState({});
+
   const [image, setImage] = useState("");
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {

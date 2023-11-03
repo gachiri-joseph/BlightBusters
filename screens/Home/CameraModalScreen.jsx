@@ -4,7 +4,6 @@ import {
   View,
   Pressable,
   StyleSheet,
-  Alert,
   PermissionsAndroid,
   Text,
   TouchableOpacity,

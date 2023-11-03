@@ -4,13 +4,10 @@ import {
   View,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  Switch,
   ActivityIndicator,
 } from 'react-native';
-import {Avatar, Title, Text} from 'react-native-paper';
+import {Avatar, Title} from 'react-native-paper';
 import {COLORS} from '../../constants/theme';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import InputContainer from '../../components/InputContainer';
 import {showMessage} from 'react-native-flash-message';

@@ -3,7 +3,6 @@ import {
   Text,
   Image,
   TouchableOpacity,
-  ScrollView,
   Platform,
 } from 'react-native';
 import React from 'react';
@@ -11,10 +10,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from 'react-native-responsive-screen';
-import {SafeAreaView} from 'react-native-safe-area-context';
-
 import {useNavigation} from '@react-navigation/native';
-
 import {COLORS, SIZES} from '../../constants/theme';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FormButton from '../../components/FormButton';

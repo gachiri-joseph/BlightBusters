@@ -7,10 +7,13 @@ import store from './redux/store/store';
 import FlashMessage from 'react-native-flash-message';
 
 export default function App() {
+
+
+
   // please check developer mode in navigation.js before continuing.
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <Provider store={store}>
+      <Provider store={store} >
         <Routes />
         <FlashMessage
           position="top"
