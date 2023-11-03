@@ -1,10 +1,9 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import HomeScreen from '../../screens/Home/HomeScreen';
-import DrawerHeader from '../../components/DrawerHeader';
-import PlantDetailScreen from '../../screens/Home/PlantDetailScreen';
 import InfoScreen1 from '../../screens/Home/InfoScreen1';
 import InfoScreen2 from '../../screens/Home/InfoScreen2';
 import InfoScreen3 from '../../screens/Home/InfoScreen3';
+import Topic1 from '../../screens/Home/Topic1';
 
 
 const HomeStack = createNativeStackNavigator();
@@ -17,16 +16,7 @@ const HomeStackNav = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          header: ({navigation, route}) => (
-            <DrawerHeader route={route} navigation={navigation} />
-          ),
-        }}
-      />
-      <HomeStack.Screen
-        name="PlantDetails"
-        component={PlantDetailScreen}
-        options={{
-          headerShown: false,
+          headerTitle:'BlightBusters'
         }}
       />
        <HomeStack.Screen
@@ -51,6 +41,13 @@ const HomeStackNav = () => {
         options={{
           title:'How we diagnose blight disease'
           // headerShown: false,
+        }}
+      />
+        <HomeStack.Screen
+        name="Topic1"
+        component={Topic1}
+        options={{
+          headerTitle:'Potato varieties'
         }}
       />
     </HomeStack.Navigator>

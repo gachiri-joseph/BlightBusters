@@ -5,12 +5,12 @@ import {colors, shadow, sizes, SPACING} from '../constants/theme';
 const CARD_WIDTH = sizes.width / 2 - (SPACING.l + SPACING.l / 2);
 const CARD_HEIGHT = 220;
 
-const TripsList = ({list,navigation}) => {
+const PopularTopics = ({list,navigation}) => {
   return (
     <View style={styles.container}>
       {list.map((item, index) => {
         return (
-          <TouchableOpacity key={index}style={styles.cardContainer} onPress={()=>navigation.navigate('PlantDetails')}>
+          <TouchableOpacity key={index}style={styles.cardContainer} onPress={()=>navigation.navigate('Topic1')}>
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image} source={item.image} />
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TripsList;
+export default PopularTopics;

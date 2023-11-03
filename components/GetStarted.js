@@ -14,7 +14,7 @@ const CARD_WIDTH = sizes.width - 70;
 const CARD_HEIGHT = 200;
 const CARD_WIDTH_SPACING = CARD_WIDTH + SPACING.l;
 
-const TopPlacesCarousel = ({list, navigation}) => {
+const GetStarted = ({list, navigation}) => {
   return (
     <FlatList
       data={list}
@@ -96,4 +96,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TopPlacesCarousel;
+export default GetStarted;

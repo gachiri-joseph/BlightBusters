@@ -8,9 +8,9 @@ import {
 } from 'react-native';
 import {PLACES, TOP_PLACES} from '../../assets/data';
 import ScreenHeader from '../../components/ScreenHeader';
-import TopPlacesCarousel from '../../components/TopPlacesCarousel';
+import GetStarted from '../../components/GetStarted';
 import SectionHeader from '../../components/SectionHeader';
-import TripsList from '../../components/TripsList';
+import PopularTopics from '../../components/PopularTopics';
 import {COLORS, colors} from '../../constants/theme';
 import {FAB, useTheme} from 'react-native-paper';
 import CustomMaterialMenu from '../../components/CustomMaterialMenu';
@@ -20,7 +20,7 @@ import {selectUser} from '../../redux/slices/userSlice';
 import firestore from '@react-native-firebase/firestore';
 import {useIsFocused} from '@react-navigation/native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-import CameraModalScreen from './CameraModalScreen';
+import CameraModal from '../../components/CameraModal';
 const HomeScreen = ({navigation, route}) => {
 
 
@@ -70,7 +70,6 @@ const HomeScreen = ({navigation, route}) => {
           isIcon={true}
         />
       ),
-      
       headerLeft: () => (
         <View style={{flexDirection: 'row', marginRight: 10}}>
           <TouchableOpacity
@@ -129,15 +128,15 @@ const HomeScreen = ({navigation, route}) => {
           // buttonTitle="See All"
           onPress={() => {}}
         />
-        <TopPlacesCarousel list={TOP_PLACES} navigation={navigation} />
+        <GetStarted list={TOP_PLACES} navigation={navigation} />
         <SectionHeader
           title="Popular topics"
           // buttonTitle="See All"
           // onPress={() => {}}
         />
-        <TripsList list={PLACES} navigation={navigation} />
+        <PopularTopics list={PLACES} navigation={navigation} />
       </ScrollView>
-      <CameraModalScreen isVisible={isModalVisible} onClose={onModalClose} />
+      <CameraModal isVisible={isModalVisible} onClose={onModalClose} />
       <FAB icon="leaf" style={styles.fab} onPress={() => openModal()} />
     </View>
   );
