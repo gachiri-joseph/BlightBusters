@@ -4,6 +4,7 @@ import {
   View,
   Pressable,
   StyleSheet,
+  Image,
   PermissionsAndroid,
   Text,
   TouchableOpacity,
@@ -16,9 +17,20 @@ import * as ImagePicker from 'react-native-image-picker';
 import {COLORS, SIZES} from '../constants/theme';
 import axios from 'axios';
 import PermissionsService from '../utils/permissions';
-const baseUrl = url;
+import * as Progress from 'react-native-progress';
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from 'react-native-responsive-screen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FormButton from './FormButton';
+import IconButton from './IconButton';
+import LoadingDots from 'react-native-loading-dots';
+import {FAB} from 'react-native-paper';
+import InnerModal from './InnerModal';
+const baseUrl = 'https://us-central1-blightbusters.cloudfunctions.net/predict';
 
-const CameraModal = ({isVisible, onClose}) => {
+const CameraModal = ({isVisible, onClose, navigation}) => {
   axios.interceptors.request.use(
     async config => {
       let request = config;
@@ -30,7 +42,7 @@ const CameraModal = ({isVisible, onClose}) => {
       request.url = configureUrl(config.url);
       return request;
     },
-    error =>console.log('errrrrrr',error),
+    error => console.log('errrrrrr', error),
   );
 
   const configureUrl = url => {
@@ -58,9 +70,6 @@ const CameraModal = ({isVisible, onClose}) => {
         });
     });
 
-
-
-
     // let bodyFormData = new FormData();
     // bodyFormData.append('file', params);
     // const url = baseUrl;
@@ -69,17 +78,16 @@ const CameraModal = ({isVisible, onClose}) => {
     //     .post(url, bodyFormData)
     //     .then(response => {
     //       console.log("///////////////////////",response);
-          
+
     //       // handle the response
 
-       
     //     })
     //     .catch(error => {
     //       // handle errors
     //       setLabel('Failed to predicting.');
     //       console.log('errrrrrrrrrrrrrrorrrrrr////////',error);
     //     });
-    //     return 
+    //     return
     // } catch (err) {
     //   console.log(err);
     // }
@@ -91,21 +99,19 @@ const CameraModal = ({isVisible, onClose}) => {
     // console.log('label', label);
     // console.log('result', result);
     const params = {
-      uri: path,  type: "image/jpeg",
-      name: "image.jpg",
+      uri: path,
+      type: 'image/jpeg',
+      name: 'image.jpg',
       // name: response.assets[0].fileName,
       // type: response.assets[0].type,
     };
     const res = await getPredication(params);
-    console.log("///////////////////////res",res);
+    console.log('///////////////////////res', res);
     if (res?.data?.class) {
       setLabel(res.data.class);
       setResult(res.data.confidence);
       console.log('label////////////', label);
       console.log('result/////////////', result);
-
-      
-
     } else {
       setLabel('Failed to predict');
       console.log('Failed to predict', label);
@@ -167,7 +173,7 @@ const CameraModal = ({isVisible, onClose}) => {
           console.log('ImagePicker Error: ', response.error);
         } else {
           const uri = response?.assets[0]?.uri;
-          console.log('uri',uri)
+          console.log('uri', uri);
           const path = Platform.OS !== 'ios' ? uri : 'file://' + uri;
           getResult(path, response);
         }
@@ -208,7 +214,8 @@ const CameraModal = ({isVisible, onClose}) => {
     let options = {
       mediaType: 'photo',
       maxWidth: 256,
-      maxHeight: 256,    quality: 1,
+      maxHeight: 256,
+      quality: 1,
     };
     try {
       await ImagePicker.launchImageLibrary(options, response => {
@@ -218,7 +225,7 @@ const CameraModal = ({isVisible, onClose}) => {
           console.log('ImagePicker Error: ', response.error);
         } else {
           const uri = response.assets[0].uri;
-          console.log('uri',uri)
+          console.log('uri', uri);
           const path = Platform.OS !== 'ios' ? uri : 'file://' + uri;
           getResult(path, response);
         }
@@ -229,11 +236,90 @@ const CameraModal = ({isVisible, onClose}) => {
   };
   const clearOutput = () => {
     setResult('');
+    setLabel('');
     setImageSource('');
   };
+  const onCloseAll = () => {
+    clearOutput();
+    onClose();
+  };
+  if (label === 'Predicting...') {
+    return (
+      <Modal animationType="slide" visible={isVisible}>
+        <View
+          style={{
+            flexDirection: 'column',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flex: 1,
+            paddingVertical: SIZES.height / 4,
+          }}>
+          <View
+            style={{
+              height: SIZES.height / 5,
+              flexDirection: 'column',
+              justifyContent: 'space-around',
+              alignItems: 'center',
+              // backgroundColor:'pink'
+            }}>
+            <View
+              style={{
+                width: 50,
+              }}>
+              <LoadingDots
+                dots={3}
+                bouncingHeight={4}
+                size={SIZES.small}
+                colors={['#089000', '#0a5d00', '#063b00']}
+              />
+            </View>
+
+            <Progress.Bar
+              progress={0.3}
+              width={200}
+              color={COLORS.primary}
+              useNativeDriver={false}
+            />
+            <Text
+              style={{
+                color: COLORS.black,
+                fontSize: SIZES.large,
+                fontWeight: 'bold',
+              }}>
+              ANALYZING IMAGE
+            </Text>
+          </View>
+          <View style={{}}>
+            <Text style={{color: COLORS.black}}>
+              Please be patient,this might take a minute.
+            </Text>
+          </View>
+        </View>
+      </Modal>
+    );
+  }
+
+  if (
+    label === 'Healthy' ||
+    label === 'Early Blight' ||
+    (label === 'Late Blight' && result !== '')
+  ) {
+    return (
+      <InnerModal
+        isVisible={isVisible}
+        onCloseAll={onCloseAll}
+        label={label}
+        result={result}
+      />
+    );
+  }
 
   return (
-    <Modal transparent={true} animationType="slide" visible={isVisible}>
+    <Modal
+      transparent={true}
+      animationType="slide"
+      visible={isVisible}
+      onRequestClose={() => clearOutput()}>
       <View style={styles.modalContent}>
         <View style={styles.InfoCont}>
           <Text
@@ -317,8 +403,8 @@ const CameraModal = ({isVisible, onClose}) => {
             </View>
           </View>
         </View>
-        <Text style={{color:'white'}}>{label}</Text>
-        <Text style={{color:'white'}}>{result}</Text>
+        <Text style={{color: 'white'}}>{label}</Text>
+        <Text style={{color: 'white'}}>{result}</Text>
         <Pressable
           onPress={onClose}
           style={{backgroundColor: 'rgba(0,255,0,0.1)', borderRadius: 6}}>

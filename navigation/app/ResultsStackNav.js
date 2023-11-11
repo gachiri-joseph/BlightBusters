@@ -2,30 +2,38 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ResultsDetectedScreen from '../../screens/Home/ResultsDetectedScreen';
 import ResultsNotDetectedScreen from '../../screens/Home/ResultsNotDetectedScreen';
 
-
-
-
-const ResultsStack= createNativeStackNavigator();
-const ResultsStackNav = ({navigation}) => {
+const ResultsStack = createNativeStackNavigator();
+const ResultsStackNav = ({navigation, route}) => {
   // const {colors} = useTheme();
+  console.log('params', route.params.label);
+  let routeName;
+  if (
+    route.params.label === 'Late Blight' ||
+    route.params.label === 'Early Blight'
+  ) {
+    routeName = 'resultsDetected';
+  } else {
+    routeName = 'resultsNotDetected';
+  }
 
   return (
-    <ResultsStack.Navigator initialRouteName='ProfileHome' screenOptions={{}}>
+    <ResultsStack.Navigator initialRouteName={routeName} screenOptions={{}}>
       <ResultsStack.Screen
         name="resultsDetected"
         component={ResultsDetectedScreen}
         options={{
-            headerShown: false,
-            title:''
-         }}
+          headerShown: false,
+          title: '',
+        }}
       />
+
       <ResultsStack.Screen
         name="resultsNotDetected"
         component={ResultsNotDetectedScreen}
         options={{
           headerShown: false,
         }}
-      /> 
+      />
     </ResultsStack.Navigator>
   );
 };

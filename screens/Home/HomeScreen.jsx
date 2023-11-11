@@ -136,7 +136,7 @@ const HomeScreen = ({navigation, route}) => {
         />
         <PopularTopics list={PLACES} navigation={navigation} />
       </ScrollView>
-      <CameraModal isVisible={isModalVisible} onClose={onModalClose} />
+      <CameraModal isVisible={isModalVisible} onClose={onModalClose}navigation={navigation} />
       <FAB icon="leaf" style={styles.fab} onPress={() => openModal()} />
     </View>
   );

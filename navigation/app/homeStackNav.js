@@ -11,7 +11,7 @@ const HomeStackNav = () => {
   // const {colors} = useTheme();
 
   return (
-    <HomeStack.Navigator screenOptions={{}}>
+    <HomeStack.Navigator screenOptions={{}} initialRouteName='Home'>
       <HomeStack.Screen
         name="Home"
         component={HomeScreen}

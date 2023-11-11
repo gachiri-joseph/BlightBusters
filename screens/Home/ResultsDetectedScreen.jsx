@@ -65,7 +65,7 @@ export default function ResultsDetectedScreen() {
           top: 28,
         }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate('Home')}
+          onPress={() => navigation.navigate('HomeStack')}
           style={{
             backgroundColor: COLORS.gray2,
             borderRadius: 999,
