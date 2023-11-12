@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
-import { SPACING, colors, sizes } from '../constants/theme';
+import { COLORS, SPACING, colors, sizes } from '../constants/theme';
 
 const ScreenHeader = () => {
   const [greeting, setGreeting] = useState('');
@@ -57,8 +57,6 @@ const ScreenHeader = () => {
     <View style={styles.container}>
 <Text style={styles.mainTitle}>{greeting}</Text>
 {/* {icon && <Image source={icon} style={{ width: 100, height: 100 }} />} */}
-{/* <Text style={styles.mainTitle}>{mainTitle}</Text> */}
-{/* <Text style={styles.secondTitle}>{secondTitle}</Text> */}
 </View>
    
   );
@@ -73,13 +71,9 @@ const styles = StyleSheet.create({
     paddingVertical: SPACING.l,
   },
   mainTitle: {
-    color:colors.black,
+    color:COLORS.black,
     fontSize: sizes.title,
-    fontWeight: 'bold',
-  },
-  secondTitle: {
-    color:colors.black,
-    fontSize: sizes.title,
+    fontFamily:'OpenSans-Bold'
   },
 });
 

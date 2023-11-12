@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
     left: 16,
   },
   title: {
-    fontSize: sizes.h2,
-    fontWeight: 'bold',
+    fontSize: sizes.h3,
+  fontFamily:'OpenSans-Medium',
     color: colors.white,
   },
   location: {

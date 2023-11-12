@@ -8,7 +8,7 @@ const InputContainer = ({iconType,placeholder}) => {
     <View style={styles.SecondaryContainer}>
     <FontAwesome6 name={iconType}color={COLORS.black} size={20}   style={styles.LoginTextInputIcon}/>
       <View style={{flex: 1, color: COLORS.black, fontSize: SIZES.medium}} >
-      <Text style={{ color: "#777777", marginLeft: 20,fontSize:20 }}>{placeholder}</Text>
+      <Text style={{ color: "#777777", marginLeft: 20,fontSize:SIZES.h3 ,fontFamily:'OpenSans-SemiBold'}}>{placeholder}</Text>
       </View>    
     </View>
   </View>

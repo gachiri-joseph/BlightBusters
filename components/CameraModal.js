@@ -4,11 +4,9 @@ import {
   View,
   Pressable,
   StyleSheet,
-  Image,
   PermissionsAndroid,
   Text,
   TouchableOpacity,
-  Alert,
   Platform,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -17,16 +15,7 @@ import * as ImagePicker from 'react-native-image-picker';
 import {COLORS, SIZES} from '../constants/theme';
 import axios from 'axios';
 import PermissionsService from '../utils/permissions';
-import * as Progress from 'react-native-progress';
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from 'react-native-responsive-screen';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FormButton from './FormButton';
-import IconButton from './IconButton';
 import LoadingDots from 'react-native-loading-dots';
-import {FAB} from 'react-native-paper';
 import InnerModal from './InnerModal';
 const baseUrl = 'https://us-central1-blightbusters.cloudfunctions.net/predict';
 
@@ -118,19 +107,21 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
     }
   };
   const manageCamera = async type => {
-    try {
-      if (!(await PermissionsService.hasCameraPermission())) {
-        return [];
-      } else {
-        if (type === 'Camera') {
-          takePhotoFromCamera();
+    if (type === 'Photo') {
+      chooseFile();
+    } else if(type === 'Camera')
+    {
+      try {
+        const camera = await PermissionsService.hasCameraPermission();
+
+        if (!camera) {
+          return [];
         } else {
-          console.log('here upload');
-          chooseFile();
+          takePhotoFromCamera();
         }
+      } catch (err) {
+        console.log(err);
       }
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -273,24 +264,29 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
                 colors={['#089000', '#0a5d00', '#063b00']}
               />
             </View>
-
+            {/* 
             <Progress.Bar
               progress={0.3}
               width={200}
               color={COLORS.primary}
               useNativeDriver={false}
-            />
+            /> */}
             <Text
               style={{
                 color: COLORS.black,
-                fontSize: SIZES.large,
-                fontWeight: 'bold',
+                fontFamily: 'OpenSans-SemiBold',
+                fontSize: SIZES.h3,
               }}>
               ANALYZING IMAGE
             </Text>
           </View>
           <View style={{}}>
-            <Text style={{color: COLORS.black}}>
+            <Text
+              style={{
+                color: COLORS.black,
+                fontFamily: 'OpenSans-Medium',
+                fontSize: SIZES.h4,
+              }}>
               Please be patient,this might take a minute.
             </Text>
           </View>
@@ -310,6 +306,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
         onCloseAll={onCloseAll}
         label={label}
         result={result}
+        imagePath={imageSource}
       />
     );
   }
@@ -324,9 +321,9 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
         <View style={styles.InfoCont}>
           <Text
             style={{
-              color: COLORS.white,
+              color: COLORS.black,
               marginTop: 10,
-              fontWeight: 'bold',
+              fontFamily: 'OpenSans-Bold',
               fontSize: SIZES.h2,
             }}>
             Identify
@@ -364,7 +361,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
                 style={{
                   color: COLORS.white,
                   marginTop: 10,
-                  fontWeight: 'bold',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: SIZES.h3,
                 }}>
                 Upload
@@ -395,7 +392,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
                 style={{
                   color: COLORS.white,
                   marginTop: 10,
-                  fontWeight: 'bold',
+                  fontFamily: 'OpenSans-Bold',
                   fontSize: SIZES.h3,
                 }}>
                 Camera

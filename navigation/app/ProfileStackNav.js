@@ -14,6 +14,7 @@ const ProfileStackNav = ({navigation}) => {
     initialRouteName='ProfileHome'
    
       screenOptions={{
+        headerTitleStyle:{fontFamily:'OpenSans-SemiBold'},
         headerStyle: {
           backgroundColor: COLORS.white,
           // shadowColor: colors.background, // iOS

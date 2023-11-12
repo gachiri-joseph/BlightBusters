@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
   },
   title: {
     marginVertical: 4,
-    fontSize: sizes.body,
-    fontWeight: 'bold',
+    fontSize: sizes.h4,
+    fontFamily:'OpenSans-Medium',
     color: colors.primary,
   },
   location: {

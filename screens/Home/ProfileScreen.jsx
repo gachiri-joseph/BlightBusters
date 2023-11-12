@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import {Avatar, Title} from 'react-native-paper';
-import {COLORS} from '../../constants/theme';
+import {COLORS, SIZES} from '../../constants/theme';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import InputContainer from '../../components/InputContainer';
 import {showMessage} from 'react-native-flash-message';
@@ -142,36 +142,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.white,
   },
-  subtitle: {
-    color: COLORS.gray,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  SecondaryCont: {
-    flex: 1,
-    width: 200,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginVertical: 10,
-    // backgroundColor:'black'
-  },
   topUserInfoSection: {
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
     height: 200,
     marginVertical: 28,
-  },
-  SecondaryContainer: {
-    marginHorizontal: 20,
-    marginTop: 28,
-    marginBottom: 28,
-    backgroundColor: COLORS.white,
-    elevation: 3,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    // paddingBottom: 20,
   },
   userInfoSection: {
     flexDirection: 'column',
@@ -180,46 +156,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-  },
-  caption: {
-    fontSize: 14,
-    lineHeight: 14,
-    fontWeight: '500',
-  },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    marginBottom: 20,
-    backgroundColor: 'black',
-  },
-  infoBoxWrapper: {
-    borderBottomColor: '#dddddd',
-    borderBottomWidth: 1,
-    borderTopColor: '#dddddd',
-    borderTopWidth: 1,
-    flexDirection: 'row',
-    height: 100,
-  },
-  infoBox: {
-    width: '50%',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  menuWrapper: {
-    marginTop: 10,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-  },
-  menuItemText: {
-    color: '#777777',
-    marginLeft: 20,
-    fontWeight: '600',
-    fontSize: 20,
-    lineHeight: 26,
+    fontSize: SIZES.h1,
+    fontFamily:'OpenSans-Medium',
   },
 });

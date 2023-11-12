@@ -16,7 +16,8 @@ const HomeStackNav = () => {
         name="Home"
         component={HomeScreen}
         options={{
-          headerTitle:'BlightBusters'
+          headerTitle:'BlightBusters',
+          headerTitleStyle:{fontFamily:'OpenSans-SemiBold'}
         }}
       />
        <HomeStack.Screen

@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Switch} from 'react-native';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {COLORS} from '../constants/theme';
+import {COLORS, SIZES} from '../constants/theme';
 
 const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
   const [darkmode, setDarkmode] = useState(false);
@@ -152,8 +152,8 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     color: 'black',
-    fontSize: 14,
-    fontWeight: 'bold',
+    fontSize: SIZES.h4,
+    fontFamily:'OpenSans-Regular'
   },
 });
 export default CustomMaterialMenu;

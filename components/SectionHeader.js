@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Text, View, StyleSheet} from 'react-native';
-import { colors, SIZES, sizes,SPACING } from '../constants/theme';
+import { COLORS, colors, SIZES, sizes,SPACING } from '../constants/theme';
 
 const SectionHeader = ({title, onPress, buttonTitle = 'Button'}) => {
   return (
@@ -22,10 +22,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   title: {
-    width:SIZES.xxLarge + 100,
-    color:colors.black,
-    fontSize: sizes.h3,
-    fontWeight: 'bold',
+    width:SIZES.xxLarge + 200,
+    color:COLORS.primary,
+    fontSize: sizes.h2,
+    fontFamily:'OpenSans-SemiBold'
   },
 });
 

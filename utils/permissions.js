@@ -1,4 +1,9 @@
-import {Alert, Platform} from 'react-native';
+import {
+  Alert,
+  Platform,
+  PermissionsAndroid,
+  PermissionStatus,
+} from 'react-native';
 import {
   check,
   PERMISSIONS,
@@ -24,24 +29,57 @@ function showAlert(msg) {
     },
   ]);
 }
-// const requestCameraPermission = async () => {
-//     if (Platform.OS === 'android') {
-//       try {
+// // const hasCameraPermission = async (withAlert = true) => {
+//   if (Platform.OS === 'android') {
+//     try {
+//       //   const permissionAndroid = await PermissionsAndroid.check('android.permission.CAMERA');
+//       //   if(permissionAndroid != PermissionsAndroid.RESULTS.granted){
+//       //     const reqPer = await PermissionsAndroid.request('android.permission.CAMERA');
+//       //     if(reqPer != 'granted'){
+//       //       return false;
+//       //     }
+//       //   }
+//       // }
+
+//       const permissionAndroid = await PermissionsAndroid.check(
+//         PermissionsAndroid.PERMISSIONS.CAMERA,
+//       );
+//       console.log('  permissionAndroid,', permissionAndroid);
+//       if (permissionAndroid == false) {
+//         console.log(' here', permissionAndroid);
 //         const granted = await PermissionsAndroid.request(
 //           PermissionsAndroid.PERMISSIONS.CAMERA,
 //           {
-//             title: 'Camera Permission',
-//             message: 'App needs camera permission',
+//             title: 'Cool Photo App Camera Permission',
+//             message:
+//               'Cool Photo App needs access to your camera ' +
+//               'so you can take awesome pictures.',
+//             buttonNegative: 'Cancel',
+//             buttonPositive: 'OK',
 //           },
 //         );
-//         // If CAMERA Permission is granted
-//         return granted === PermissionsAndroid.RESULTS.GRANTED;
-//       } catch (err) {
-//         console.warn(err);
-//         return false;
+//         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+//           return true;
+//         } else
+//           granted === PermissionsAndroid.RESULTS.DENIED ||
+//             granted === PermissionsAndroid.RESULTS.BLOCKED;
+//         {
+//           if (withAlert) {
+//             showAlert(
+//               'Permission not granted for camera. You will not able to use camera in this application.',
+//             );
+//           }
+//           return false;
+//         }
+//       } else {
+//         return true;
 //       }
-//     } else return true;
-//   };
+//     } catch (err) {
+//       console.warn(err);
+//       return false;
+//     }
+//   }
+// // };
 const hasCameraPermission = async (withAlert = true) => {
   try {
     const permission = isIOS

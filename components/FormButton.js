@@ -1,6 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {COLORS} from '../constants/theme';
+import {COLORS, SIZES} from '../constants/theme';
 
 const FormButton = ({title, onPress}) => {
   const {btnText, btnContainer} = styles;
@@ -21,9 +21,9 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   btnText: {
-    // fontFamily:'serif',
+    fontFamily:'OpenSans-SemiBold',
     color: COLORS.white,
-    fontSize: 18,
+    fontSize: SIZES.h4,
   },
 });
 export default FormButton;

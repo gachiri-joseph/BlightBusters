@@ -34,7 +34,7 @@ const FormInput = ({labelValue, placeholderText, iconType, ...rest}) => {
             numberOfLines={1}
             placeholder={placeholderText}
             placeholderTextColor="black"
-            style={{flex: 1, color: COLORS.black, fontSize: SIZES.medium}}
+            style={{flex: 1, color: COLORS.black, fontSize: SIZES.medium,fontFamily:'OpenSans-SemiBold'}}
             {...rest}
           />
           <TouchableOpacity onPress={() => setObsecureText(!obsecureText)}>

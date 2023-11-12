@@ -1,7 +1,6 @@
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import ProfileStackNav from './ProfileStackNav';
-import LoadingAnalysisScreen from '../../screens/Home/LoadingAnalysisScreen';
 import ResultsStackNav from './ResultsStackNav';
 import HomeStackNav from './homeStackNav';
 
@@ -14,12 +13,6 @@ const AppStackNav = ({navigation}) => {
         name="HomeStack"
         options={{headerShown: false}}
         component={HomeStackNav}
-      />
-  
-      <AppStack.Screen
-        name="loadingAnalysis"
-        options={{headerShown: false}}
-        component={LoadingAnalysisScreen}
       />
       <AppStack.Screen
         name="resultsStack"
