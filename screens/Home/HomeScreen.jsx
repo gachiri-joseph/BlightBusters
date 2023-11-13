@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import {PLACES, TOP_PLACES} from '../../assets/data';
+import {popular_Topics,GetStarted_Topics} from '../../assets/data';
 import ScreenHeader from '../../components/ScreenHeader';
 import GetStarted from '../../components/GetStarted';
 import SectionHeader from '../../components/SectionHeader';
@@ -125,16 +125,13 @@ const HomeScreen = ({navigation, route}) => {
         <ScreenHeader />
         <SectionHeader
           title="Getting started"
-          // buttonTitle="See All"
           onPress={() => {}}
         />
-        <GetStarted list={TOP_PLACES} navigation={navigation} />
+        <GetStarted list={GetStarted_Topics} navigation={navigation} />
         <SectionHeader
           title="Popular topics"
-          // buttonTitle="See All"
-          // onPress={() => {}}
         />
-        <PopularTopics list={PLACES} navigation={navigation} />
+        <PopularTopics list={popular_Topics} navigation={navigation} />
       </ScrollView>
       <CameraModal isVisible={isModalVisible} onClose={onModalClose}navigation={navigation} />
       <FAB icon="leaf" style={styles.fab} onPress={() => openModal()} />

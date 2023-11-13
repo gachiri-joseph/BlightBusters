@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   Modal,
   View,
@@ -17,6 +17,9 @@ import axios from 'axios';
 import PermissionsService from '../utils/permissions';
 import LoadingDots from 'react-native-loading-dots';
 import InnerModal from './InnerModal';
+import {NetContext} from '../context/NetProvider';
+import AlertModal from './AlertModal';
+
 const baseUrl = 'https://us-central1-blightbusters.cloudfunctions.net/predict';
 
 const CameraModal = ({isVisible, onClose, navigation}) => {
@@ -42,75 +45,77 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
     return authUrl;
   };
 
-  const getPredication = async params => {
-    return new Promise((resolve, reject) => {
-      var bodyFormData = new FormData();
-      bodyFormData.append('file', params);
-      const url = baseUrl;
-      return axios
-        .post(url, bodyFormData)
-        .then(response => {
-          // console.log("///////////////////////",response);
-          resolve(response);
-        })
-        .catch(error => {
-          setLabel('Failed to predicting.');
-          reject('err', error);
-        });
-    });
+  const {offline, showAlert} = useContext(NetContext);
+  // console.log('offline', offline);
 
-    // let bodyFormData = new FormData();
-    // bodyFormData.append('file', params);
-    // const url = baseUrl;
-    // try {
-    //   await axios
-    //     .post(url, bodyFormData)
-    //     .then(response => {
-    //       console.log("///////////////////////",response);
+  const getPrediction = async params => {
+    let bodyFormData = new FormData();
+    bodyFormData.append('file', params);
+    const url = baseUrl;
+    try {
+      const response = await axios.post(url, bodyFormData);
+      // console.log("///////////////////////",response);
+      return response;
+    } catch (error) {
+      setLabel('Failed to predicting.');
+      Alert.alert('something went wrong', error.message, [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ]);
 
-    //       // handle the response
-
-    //     })
-    //     .catch(error => {
-    //       // handle errors
-    //       setLabel('Failed to predicting.');
-    //       console.log('errrrrrrrrrrrrrrorrrrrr////////',error);
-    //     });
-    //     return
-    // } catch (err) {
-    //   console.log(err);
-    // }
+      // console.log(error.message)
+    }
   };
   const getResult = async (path, response) => {
-    setImageSource(path);
-    setLabel('Predicting...');
-    setResult('');
-    // console.log('label', label);
-    // console.log('result', result);
-    const params = {
-      uri: path,
-      type: 'image/jpeg',
-      name: 'image.jpg',
-      // name: response.assets[0].fileName,
-      // type: response.assets[0].type,
-    };
-    const res = await getPredication(params);
-    console.log('///////////////////////res', res);
-    if (res?.data?.class) {
-      setLabel(res.data.class);
-      setResult(res.data.confidence);
-      console.log('label////////////', label);
-      console.log('result/////////////', result);
+    if (offline) {
+      showAlert();
+      return null;
     } else {
-      setLabel('Failed to predict');
-      console.log('Failed to predict', label);
+      setImageSource(path);
+      setLabel('Predicting...');
+      setResult('');
+      // console.log('label', label);
+      // console.log('result', result);
+      const params = {
+        uri: path,
+        type: 'image/jpeg',
+        name: 'image.jpg',
+        // name: response.assets[0].fileName,
+        // type: response.assets[0].type,
+      };
+
+      try {
+        const res = await getPrediction(params);
+        // console.log('///////////////////////res', res);
+        if (res?.data?.class) {
+          setLabel(res.data.class);
+          setResult(res.data.confidence);
+          // console.log('label////////////', label);
+          // console.log('result/////////////', result);
+        } else {
+          setLabel('Failed to predict');
+          Alert.alert('something went wrong', label, [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+          ]);
+
+          // console.log('Failed to predict', label);
+        }
+      } catch (err) {
+        console.log(err);
+      }
     }
   };
   const manageCamera = async type => {
     if (type === 'Photo') {
       chooseFile();
-    } else if(type === 'Camera')
-    {
+    } else if (type === 'Camera') {
       try {
         const camera = await PermissionsService.hasCameraPermission();
 
@@ -225,13 +230,10 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
       console.log(err);
     }
   };
-  const clearOutput = () => {
+  const onCloseAll = () => {
     setResult('');
     setLabel('');
     setImageSource('');
-  };
-  const onCloseAll = () => {
-    clearOutput();
     onClose();
   };
   if (label === 'Predicting...') {
@@ -316,7 +318,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
       transparent={true}
       animationType="slide"
       visible={isVisible}
-      onRequestClose={() => clearOutput()}>
+      onRequestClose={() => onCloseAll()}>
       <View style={styles.modalContent}>
         <View style={styles.InfoCont}>
           <Text
@@ -403,7 +405,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
         <Text style={{color: 'white'}}>{label}</Text>
         <Text style={{color: 'white'}}>{result}</Text>
         <Pressable
-          onPress={onClose}
+          onPress={onCloseAll}
           style={{backgroundColor: 'rgba(0,255,0,0.1)', borderRadius: 6}}>
           <MaterialCommunityIcons name="close" color={COLORS.gray} size={32} />
         </Pressable>

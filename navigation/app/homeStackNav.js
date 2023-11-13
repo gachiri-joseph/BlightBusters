@@ -25,23 +25,23 @@ const HomeStackNav = () => {
         component={InfoScreen1}
         options={{
           title:'Potato farming in Kenya',
-          // headerShown: false,
+          headerShown: false,
         }}
       />
        <HomeStack.Screen
         name="InfoScreen2"
         component={InfoScreen2}
         options={{
-          title:'Blight disease in potatoes'
-          // headerShown: false,
+          title:'Blight disease in potatoes',
+          headerShown: false,
         }}
       />
        <HomeStack.Screen
         name="InfoScreen3"
         component={InfoScreen3}
         options={{
-          title:'How we diagnose blight disease'
-          // headerShown: false,
+          title:'How we diagnose blight disease',
+          headerShown: false,
         }}
       />
         <HomeStack.Screen
