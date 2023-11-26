@@ -45,10 +45,10 @@ const HomeStackNav = () => {
         }}
       />
         <HomeStack.Screen
-        name="Topic1"
+        name="Topics"
         component={Topic1}
         options={{
-          headerTitle:'Potato varieties'
+          headerShown: false,
         }}
       />
     </HomeStack.Navigator>

@@ -12,7 +12,7 @@ const InnerModal = ({isVisible, onCloseAll, label, result, imagePath}) => {
     <Modal
       animationType="slide"
       visible={isVisible}
-      onRequestClose={() => clearOutput()}>
+      onRequestClose={() => onCloseAll()}>
       <View
         style={{
           flexDirection: 'column',

@@ -1,12 +1,29 @@
-import {View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
-import React, {useContext} from 'react';
+import {View, Text, ScrollView, Image, TouchableOpacity, StyleSheet} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
 import {NetContext} from '../../context/NetProvider';
 import AlertModal from '../../components/AlertModal';
 import {COLORS, SIZES} from '../../constants/theme';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-
+import firestore from '@react-native-firebase/firestore';
+import BackButton from '../../components/BackButton';
 const InfoScreen3 = ({navigation}) => {
   const {offline} = useContext(NetContext);
+
+  const [readPar1, setReadPar1] = useState(false);
+  const [info, setInfo] = useState('');
+  const getInfo = async () => {
+    try {
+      const userDocument = await firestore()
+        .collection('information')
+        .doc('3')
+        .get();
+      setInfo(userDocument.data());
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    if (info === '') getInfo();
+  }, []);
 
   if (offline) {
     return <AlertModal offline={offline} navigation={navigation} />;
@@ -31,33 +48,10 @@ const InfoScreen3 = ({navigation}) => {
             backgroundColor: 'pink',
           }}>
           <Text
-            style={{
-              position: 'absolute',
-              zIndex: 6,
-              bottom: 40,
-
-              color: COLORS.white,
-              fontSize: SIZES.h2,
-              fontFamily: 'OpenSans-Bold',
-            }}>
+           style={styles.mainTitle}>
             How BlighBusters detects potato blight disease
           </Text>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{
-              position: 'absolute',
-              justifyContent: 'center',
-              alignItems: 'center',
-              top: 10,
-              left: 10,
-              zIndex: 6,
-              width: 40,
-              height: 40,
-              backgroundColor: 'rgba(0,0,0,0.4)',
-              borderRadius: 999,
-            }}>
-            <Ionicons name="arrow-back" color={COLORS.white} size={35} />
-          </TouchableOpacity>
+          <BackButton navigation={navigation}/>
 
           <Image
             source={require('../../assets/images/smart-digital-agriculture-technology-futuristic-sensor-data-collection-management-artificial-intelligence-to-control-quality-205888734.webp')}
@@ -70,26 +64,24 @@ const InfoScreen3 = ({navigation}) => {
         </View>
         <View>
           <Text
-            style={{
-              padding: 10,
-              // textAlign: 'center',
-              color: COLORS.black,
-              fontSize: SIZES.h3,
-              fontFamily: 'OpenSans-SemiBold',
-            }}>
+           style={styles.title}>
             Overview
           </Text>
+
           <Text
-            style={{
-              padding: 10,
-              // textAlign: 'center',
-              color: COLORS.primary,
-              fontSize: SIZES.h4,
-              fontFamily: 'OpenSans-Regular',
-            }}>
-             BlightBusters utilizes machine learning techniques to accurately
-            detect potato blight disease and provide solutions to farmers.
+            style={styles.paragraph}>
+            BlightBusters utilizes machine learning techniques to accurately
+            detect 
+            {readPar1 & (info != '') ? info?.par1.replaceAll('  ', '') : '...'}
           </Text>
+          <TouchableOpacity
+          style={styles.topacity}
+            onPress={() => setReadPar1(!readPar1)}>
+            <Text style={{color: COLORS.white}}>
+              {readPar1 ? 'See less' : 'Read more'}
+            </Text>
+          </TouchableOpacity>
+
         </View>
 
         {/* <Image
@@ -105,6 +97,52 @@ const InfoScreen3 = ({navigation}) => {
       </View>
     </ScrollView>
   );
-};
+};const styles = StyleSheet.create({
+  title: {
+    padding: 10,
+    color: COLORS.black,
+    fontSize: SIZES.h3,
+    fontFamily: 'OpenSans-SemiBold',
+  },
+  mainTitle: {
+    position: 'absolute',
+    zIndex: 6,
+    bottom: 40,
+    left: 10,
+    color: COLORS.white,
+    fontSize: SIZES.h2,
+    fontFamily: 'OpenSans-Bold',
+  },
+  paragraph: {
+    padding: 10,
+    color: COLORS.primary,
+    fontSize: SIZES.h4,
+    fontFamily: 'OpenSans-Regular',
+  },
+  innerTitle: {
+    padding: 10,
+    textAlign: 'center',
+    color: COLORS.primary,
+    fontSize: SIZES.h4,
+    fontFamily: 'OpenSans-Regular',
+  },
+  image: {
+    width: SIZES.width - 20,
+    height: SIZES.height / 3,
+    resizeMode: 'contain',
+    marginHorizontal: 10,
+    marginVertical: 5,
+  },
+  topacity: {
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: SIZES.width / 3,
+    borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    height: 32,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default InfoScreen3;
