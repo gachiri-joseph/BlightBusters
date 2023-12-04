@@ -26,10 +26,8 @@ import {selectUser} from '../../redux/slices/userSlice';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 
 export default function EditProfileScreen() {
-  const [darkmode, setDarkmode] = useState(false);
-  const [device, setDevice] = useState(false);
   const {width} = useWindowDimensions();
-  const [theme, setTheme] = useState('dim');
+
   const [isOpen, setIsOpen] = useState(false);
   const [image, setImage] = useState(null);
 
@@ -39,7 +37,6 @@ export default function EditProfileScreen() {
   const [updated, setUpdated] = useState(false);
   //   const {colors} = useTheme();
   const user = useSelector(selectUser);
-  // console.log('user11',user)
 
   ///firebase///
   const getUser = async () => {
@@ -49,7 +46,6 @@ export default function EditProfileScreen() {
       .get()
       .then(documentSnapshot => {
         if (documentSnapshot.exists) {
-          // console.log('User Data', documentSnapshot.data());
           setUserData(documentSnapshot.data());
         }
         setUpdated(false);
@@ -76,10 +72,7 @@ export default function EditProfileScreen() {
       .then(() => {
         console.log('User Updated!');
         setUpdated(true);
-        // Alert.alert(
-        //   'Profile Updated!',
-        //   'Your profile has been updated successfully.',
-        // );
+
         showMessage({
           message: 'Your profile has been updated successfully!',
           type: 'success',
@@ -108,9 +101,9 @@ export default function EditProfileScreen() {
 
     // Set transferred state
     task.on('state_changed', taskSnapshot => {
-      console.log(
-        `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
-      );
+      // console.log(
+      //   `${taskSnapshot.bytesTransferred} transferred out of ${taskSnapshot.totalBytes}`,
+      // );
 
       setTransferred(
         Math.round(taskSnapshot.bytesTransferred / taskSnapshot.totalBytes) *
@@ -126,13 +119,15 @@ export default function EditProfileScreen() {
       setUploading(false);
       setImage(null);
 
-      // Alert.alert(
-      //   'Image uploaded!',
-      //   'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
-      // );
       return url;
     } catch (e) {
-      console.log(e);
+      Alert.alert('something went wrong ❗', 'try again later 🕑', [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ]);
       return null;
     }
   };
@@ -140,52 +135,6 @@ export default function EditProfileScreen() {
   useEffect(() => {
     getUser();
   }, [updated]);
-  //
-  //////
-  // const takePhotoFromCamera = () => {
-  //   ImagePicker.openCamera({
-  //     compressImageMaxWidth: 300,
-  //     compressImageMaxHeight: 300,
-  //     cropping: true,
-  //     compressImageQuality: 0.7,
-  //     cropperActiveWidgetColor:COLORS.primary,
-  //     // showCropFrame:false,
-  //     // hideBottomControls:true,
-  //     // enableRotationGesture:true,
-  //     // cropperToolbarColor:'pink',//not working
-  //     cropperStatusBarColor:'white',
-  //     // freeStyleCropEnabled:true
-  //   })
-  //     .then(image => {
-  //       console.log(image);
-  //       setImage(image.path);
-  //       bottomSheetModalRef.current?.dismiss();
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       return err;
-  //     });
-  // };
-
-  // const choosePhotoFromLibrary = () => {
-  //   ImagePicker.openPicker({
-  //     width: 300,
-  //     height: 300,
-  //     cropping: true,
-  //     compressImageQuality: 0.7,
-  //   })
-  //     .then(image => {
-  //       console.log(image);
-  //       setImage(image.path);
-  //       bottomSheetModalRef.current?.dismiss();
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //       return err;
-  //     });
-  // };
-
-  //////image picker
 
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
@@ -200,7 +149,13 @@ export default function EditProfileScreen() {
         // If CAMERA Permission is granted
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (err) {
-        console.warn(err);
+        Alert.alert('something went wrong ❗','try again later 🕑', [
+          {
+            text: 'Cancel',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+        ]);
         return false;
       }
     } else return true;
@@ -412,7 +367,6 @@ export default function EditProfileScreen() {
 }
 
 const styles = StyleSheet.create({
- 
   panel: {
     padding: 20,
     backgroundColor: COLORS.white,
@@ -424,20 +378,18 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOpacity: 0.4,
   },
- 
+
   panelTitle: {
     fontSize: SIZES.h1,
     color: 'black',
     height: 35,
-    fontFamily:'OpenSans-SemiBold'
+    fontFamily: 'OpenSans-SemiBold',
   },
   panelSubtitle: {
     fontSize: SIZES.h4,
     color: 'gray',
     height: 30,
-    fontFamily:'OpenSans-Medium',
+    fontFamily: 'OpenSans-Medium',
     marginBottom: 10,
   },
-
- 
 });

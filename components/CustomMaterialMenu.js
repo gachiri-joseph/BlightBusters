@@ -4,11 +4,8 @@ import {View, Text, TouchableOpacity, StyleSheet, Switch} from 'react-native';
 import {Menu, MenuItem, MenuDivider} from 'react-native-material-menu';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {COLORS, SIZES} from '../constants/theme';
-
+import {Linking} from 'react-native';
 const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
-  const [darkmode, setDarkmode] = useState(false);
-  const [notifications, setNotifications] = useState(false);
-  const [theme, setTheme] = useState('dim');
   const [visible, setVisible] = useState(false);
 
   const hideMenu = () => setVisible(false);
@@ -72,7 +69,10 @@ const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
             width: '100%',
             color: COLORS.white,
             display: 'flex',
-          }}>
+          }}
+      
+          
+          >
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Enable notifications</Text>
@@ -89,7 +89,12 @@ const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
           style={{
             color: COLORS.white,
             display: 'flex',
-          }}>
+          }}
+          onPress={() =>
+            Linking.openURL(
+              'https://gachiri-joseph.github.io/terms-and-conditions/',
+            )
+          }>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Terms of use</Text>
@@ -107,7 +112,12 @@ const CustomMaterialMenu = ({isIcon, menuText, textStyle}) => {
             color: COLORS.white,
             display: 'flex',
             borderRadius: 15,
-          }}>
+          }}
+          onPress={() =>
+            Linking.openURL(
+              'https://gachiri-joseph.github.io/terms-and-conditions/',
+            )
+          }>
           <View style={styles.contentContainer}>
             <View style={styles.row}>
               <Text style={styles.subtitle}>Privacy policy</Text>
@@ -153,7 +163,7 @@ const styles = StyleSheet.create({
   subtitle: {
     color: 'black',
     fontSize: SIZES.h4,
-    fontFamily:'OpenSans-Regular'
+    fontFamily: 'OpenSans-Regular',
   },
 });
 export default CustomMaterialMenu;

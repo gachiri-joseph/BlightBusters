@@ -10,7 +10,7 @@ const PopularTopics = ({list,navigation}) => {
     <View style={styles.container}>
       {list.map((item, index) => {
         return (
-          <TouchableOpacity key={index}style={styles.cardContainer} onPress={()=>navigation.navigate('Topics')}>
+          <TouchableOpacity key={index}style={styles.cardContainer}activeOpacity={0.75} onPress={()=>navigation.navigate('Topics')}>
             <View style={[styles.card, shadow.light]} key={item.id}>
               <View style={styles.imageBox}>
                 <Image style={styles.image} source={item.image} />

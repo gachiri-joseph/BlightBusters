@@ -32,20 +32,7 @@ const OnBoardingScreen = ({navigation}) => {
       </Animated.View>
     );
   };
-  const nextButton = () => {
-    return (
-      <Animated.View
-        entering={FadeIn.duration(300).delay(250)}
-        exiting={FadeOut.duration(250).delay(200)}>
-        <TouchableOpacity style={OnBoardingScreenDoneBtn('transparent')}>
-          <Text style={OnBoardingScreenDoneBtnText}>next</Text>
-        </TouchableOpacity>
-      </Animated.View>
-    );
-  };
-  //note you can customize the skip and next button with the skipLabel and nextLabel attributes
-  //or the NextLabelComponent and SkipLabelComponent
-  //////////////////////////////////////////////////////////
+
 
   return (
     <>
@@ -54,10 +41,6 @@ const OnBoardingScreen = ({navigation}) => {
         <Onboarding
           onDone={handleDone}
           onSkip={handleDone}
-          // skipLabel={<View><Text>skip to homescreen</Text></View>}
-          // nextLabel={<View><Text>next stuff</Text></View>}
-          // showPagination={true}
-          NextButtonComponent={nextButton}
           DoneButtonComponent={doneButton}
           bottomBarHighlight={false}
           pages={[

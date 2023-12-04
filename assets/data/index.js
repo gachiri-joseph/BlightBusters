@@ -1,17 +1,17 @@
 export const GetStarted_Topics = [
   {
     id: 1,
-    image: require('../icons/potato.png'),
+    image: require('../images/pic3.jpg'),
     title: 'Potato farming in Kenya',
   },
   {
     id: 2,
-    image: require('../icons/blight.png'),
+    image: require('../images/foliar_late_blight03.png'),
     title: 'Blight disease in potatoes',
   },
   {
     id: 3,
-    image: require('../icons/diagnose.png'),
+    image: require('../images/smart-digital-agriculture-technology-futuristic-sensor-data-collection-management-artificial-intelligence-to-control-quality-205888734.webp'),
     title: 'How we diagnose blight disease',
   },
 ];

@@ -18,9 +18,9 @@ import PermissionsService from '../utils/permissions';
 import LoadingDots from 'react-native-loading-dots';
 import InnerModal from './InnerModal';
 import {NetContext} from '../context/NetProvider';
-import AlertModal from './AlertModal';
+const baseUrl = 'https://lulranger-blightbusters2.hf.space/predict';
 
-const baseUrl = 'https://us-central1-blightbusters.cloudfunctions.net/predict';
+// const baseUrl = 'https://us-central1-blightbusters.cloudfunctions.net/predict';
 
 const CameraModal = ({isVisible, onClose, navigation}) => {
   axios.interceptors.request.use(
@@ -93,11 +93,10 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
         if (res?.data?.class) {
           setLabel(res.data.class);
           setResult(res.data.confidence);
-          // console.log('label////////////', label);
-          // console.log('result/////////////', result);
+         
         } else {
           setLabel('Failed to predict');
-          Alert.alert('something went wrong', label, [
+          Alert.alert('something went wrong ❗','try again later 🕑', [
             {
               text: 'Cancel',
               onPress: () => console.log('Cancel Pressed'),
@@ -105,7 +104,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
             },
           ]);
 
-          // console.log('Failed to predict', label);
+          console.log('Failed to predict', label);
         }
       } catch (err) {
         console.log(err);
@@ -133,24 +132,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
   const [result, setResult] = useState('');
   const [label, setLabel] = useState('');
   const [imageSource, setImageSource] = useState(null);
-  // const requestCameraPermission = async () => {
-  //   if (Platform.OS === 'android') {
-  //     try {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.CAMERA,
-  //         {
-  //           title: 'Camera Permission',
-  //           message: 'App needs camera permission',
-  //         },
-  //       );
-  //       // If CAMERA Permission is granted
-  //       return granted === PermissionsAndroid.RESULTS.GRANTED;
-  //     } catch (err) {
-  //       console.warn(err);
-  //       return false;
-  //     }
-  //   } else return true;
-  // };
+ 
   const takePhotoFromCamera = async () => {
     let options = {
       mediaType: 'photo',
@@ -177,34 +159,8 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
     } catch (err) {
       console.log(err);
     }
-    // let isCameraPermitted = await requestCameraPermission();
-    // // let isStoragePermitted = await requestExternalWritePermission();
-    // if (isCameraPermitted) {
-    //   try {
-    //     await ImagePicker.launchCamera(options, response => {
-    //       if (response.didCancel) {
-    //         console.log('User cancelled image picker');
-    //       } else if (response.error) {
-    //         console.log('Image picker error: ', response.error);
-    //       } else {
-    //         // let imageUri = response.uri || response.assets?.[0]?.uri;
-    //         // setImageSource(response.assets[0].uri);
-    //         const uri = response?.assets[0]?.uri;
-    //         const path = Platform.OS !== 'ios' ? uri : 'file://' + uri;
-    //         getResult(path, response);
-    //       }
-    //     });
-    //   } catch (err) {
-    //     console.log(err);
-    //   }
-    // }
-    // else{
-
-    //   Alert.alert(
-    //     'Image uploaded!',
-    //     'Your image has been uploaded to the Firebase Cloud Storage Successfully!',
-    //   );
-    //   }
+ 
+  
   };
   const chooseFile = async () => {
     let options = {
@@ -266,13 +222,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
                 colors={['#089000', '#0a5d00', '#063b00']}
               />
             </View>
-            {/* 
-            <Progress.Bar
-              progress={0.3}
-              width={200}
-              color={COLORS.primary}
-              useNativeDriver={false}
-            /> */}
+         
             <Text
               style={{
                 color: COLORS.black,
@@ -298,9 +248,11 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
   }
 
   if (
-    label === 'Healthy' ||
-    label === 'Early Blight' ||
-    (label === 'Late Blight' && result !== '')
+    label === 'potato_healthy' ||
+    label === 'potato_late_blight' ||
+    label === 'Not_Disease' ||
+    label === 'potato_early_blight' 
+    // (label === 'potato_healthy' && result !== '')
   ) {
     return (
       <InnerModal
@@ -309,6 +261,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
         label={label}
         result={result}
         imagePath={imageSource}
+        navigation={navigation}
       />
     );
   }
@@ -402,8 +355,6 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
             </View>
           </View>
         </View>
-        <Text style={{color: 'white'}}>{label}</Text>
-        <Text style={{color: 'white'}}>{result}</Text>
         <Pressable
           onPress={onCloseAll}
           style={{backgroundColor: 'rgba(0,255,0,0.1)', borderRadius: 6}}>

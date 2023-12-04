@@ -47,6 +47,7 @@ const LoginScreen = ({navigation}) => {
 
         .then(async credentials => {
           // const user = credentials.user;
+
           showMessage({
             message: 'successfully logged in!',
             type: 'success',
@@ -118,7 +119,7 @@ const LoginScreen = ({navigation}) => {
         <TouchableOpacity
           style={styles.forgotButton}
           onPress={() => navigation.navigate('ForgotPassword')}>
-          <Text style={{color: COLORS.black, fontSize: SIZES.large}}>
+          <Text style={{color: COLORS.black, fontSize: SIZES.medium}}>
             Forgot Password?
           </Text>
         </TouchableOpacity>

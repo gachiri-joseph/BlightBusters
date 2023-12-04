@@ -47,6 +47,8 @@ const HomeScreen = ({navigation, route}) => {
       });
   });
   const openModal = () => {
+
+      //  console.log('getting user')
     setIsModalVisible(true);
   };
   const onModalClose = () => {
@@ -133,8 +135,8 @@ const HomeScreen = ({navigation, route}) => {
         />
         <PopularTopics list={popular_Topics} navigation={navigation} />
       </ScrollView>
-      <CameraModal isVisible={isModalVisible} onClose={onModalClose}navigation={navigation} />
-      <FAB icon="leaf" style={styles.fab} onPress={() => openModal()} />
+      <CameraModal isVisible={isModalVisible} onClose={onModalClose} />
+      <FAB icon="leaf"color={COLORS.primary} style={styles.fab} onPress={() => openModal()} />
     </View>
   );
 };
@@ -149,7 +151,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
-    elevation: 3,
+    elevation: 4,
     // backgroundColor:COLORS.white
   },
 });

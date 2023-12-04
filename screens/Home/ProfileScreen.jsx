@@ -5,6 +5,9 @@ import {
   ScrollView,
   StyleSheet,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Text,
 } from 'react-native';
 import {Avatar, Title} from 'react-native-paper';
 import {COLORS, SIZES} from '../../constants/theme';
@@ -22,8 +25,10 @@ const ProfileScreen = ({navigation}) => {
   const isFocused = useIsFocused();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [tooltipVisible, setToolTipVisible] = useState(false);
   const getUser = async () => {
-    console.log('getting data');
     await firestore()
       .collection('Users')
       .doc(user.uid)
@@ -37,11 +42,23 @@ const ProfileScreen = ({navigation}) => {
   };
 
   useEffect(() => {
-    // console.log('getting user')
     if (user) getUser();
+    // const setTip=setTimeOut(()=>setToolTipVisible(true),2000)
+
+    // return ()=>clearTimeout(setTip);
   }, [user, isFocused]);
 
-  async function handleLogout() {
+  const handleDeleteAccount = () => {
+    setDeleteModalVisible(true); // Close the modal after account deletion
+  };
+
+  const handleLogout = () => {
+    setLogoutModalVisible(true);
+  };
+
+  const confirmLogout = async () => {
+    setLogoutModalVisible(false);
+    setDeleteModalVisible(false);
     try {
       await auth()
         .signOut()
@@ -53,21 +70,84 @@ const ProfileScreen = ({navigation}) => {
         icon: 'danger',
       });
     }
-  }
-
+  };
+// if(tooltipVisible){
+//   return(
+//     <View style={{position:'absolute',left:0}}>
+//       <Text>press here to edit</Text>
+//     </View>
+//   )
+// }
   if (loading) {
-    <View  style={{
-      flex:1,
-      backgroundColor:COLORS.white,
-      justifyContent: 'center',
-      alignItems: 'center',
-    }} >
-      <ActivityIndicator color={COLORS.primary} size={'large'}/>
-    </View>
+    <View
+      style={{
+        flex: 1,
+        backgroundColor: COLORS.white,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+      <ActivityIndicator color={COLORS.primary} size={'large'} />
+    </View>;
   }
 
   return (
     <ScrollView style={styles.container}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={logoutModalVisible}
+        onRequestClose={() => setLogoutModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Are you sure you want to log out?
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                width: '70%',
+              }}>
+              <TouchableOpacity onPress={confirmLogout}>
+                <Text style={styles.modalButtonRed}>Log Out</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setLogoutModalVisible(false)}>
+                <Text style={styles.modalButton}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={deleteModalVisible}
+        onRequestClose={() => setDeleteModalVisible(false)}>
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>
+              Are you sure you want to delete your account?
+            </Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                width: '70%',
+              }}>
+              <TouchableOpacity onPress={confirmLogout}>
+                <Text style={styles.modalButtonRed}>Delete</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setDeleteModalVisible(false)}>
+                <Text style={styles.modalButton}>Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       <View style={styles.topUserInfoSection}>
         <View
           style={{
@@ -129,7 +209,7 @@ const ProfileScreen = ({navigation}) => {
           }
         />
         <FormButton title="log out" onPress={handleLogout} />
-        <FormButton title="Delete Account" onPress={() => {}} />
+        <FormButton title="Delete Account" onPress={handleDeleteAccount} />
       </View>
     </ScrollView>
   );
@@ -157,6 +237,35 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: SIZES.h1,
-    fontFamily:'OpenSans-Medium',
+    fontFamily: 'OpenSans-Medium',
+  },
+
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: SIZES.h4,
+    fontFamily: 'OpenSans-Regular',
+    color: COLORS.primary,
+    marginBottom: 20,
+  },
+  modalButton: {
+    fontSize: SIZES.h3,
+    fontFamily: 'OpenSans-Medium',
+    color: COLORS.primary,
+  },
+  modalButtonRed: {
+    fontSize: SIZES.h3,
+    fontFamily: 'OpenSans-Medium',
+    color: COLORS.red,
   },
 });

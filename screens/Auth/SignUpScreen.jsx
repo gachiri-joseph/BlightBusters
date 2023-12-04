@@ -57,7 +57,7 @@ const SignUpScreen = ({navigation}) => {
       await auth()
         .createUserWithEmailAndPassword(email.trim(), password)
         .then(async credentials => {
-          console.log('credentials', credentials);
+          await credentials.user.sendEmailVerification()
           await addUserToDb(credentials?.user?.uid);
           showMessage({
             message: 'account created successfully and signed in !',

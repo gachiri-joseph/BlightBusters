@@ -34,25 +34,6 @@ const ModalScreen = ({navigation}) => {
     } else return true;
   };
 
-  // const requestExternalWritePermission = async () => {
-  //   if (Platform.OS === 'android') {
-  //     try {
-  //       const granted = await PermissionsAndroid.request(
-  //         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-  //         {
-  //           title: 'External Storage Write Permission',
-  //           message: 'App needs write permission',
-  //         },
-  //       );
-  //       // If WRITE_EXTERNAL_STORAGE Permission is granted
-  //       return granted === PermissionsAndroid.RESULTS.GRANTED;
-  //     } catch (err) {
-  //       console.warn(err);
-  //       alert('Write permission err', err);
-  //     }
-  //     return false;
-  //   } else return true;
-  // };
 
   const captureImage = async (type) => {
     let options = {
@@ -72,26 +53,6 @@ const ModalScreen = ({navigation}) => {
       }
       navigation.navigate('CameraScreen')
     }
-        // if (response.didCancel) {
-        //   alert('User cancelled camera picker');
-        //   return;
-        // } else if (response.errorCode == 'camera_unavailable') {
-        //   alert('Camera not available on device');
-        //   return;
-        // } else if (response.errorCode == 'permission') {
-        //   alert('Permission not satisfied');
-        //   return;
-        // } else if (response.errorCode == 'others') {
-        //   alert(response.errorMessage);
-        //   return;
-        // }
-        // console.log('base64 -> ', response.base64);
-        // console.log('uri -> ', response.uri);
-        // console.log('width -> ', response.width);
-        // console.log('height -> ', response.height);
-        // console.log('fileSize -> ', response.fileSize);
-        // console.log('type -> ', response.type);
-        // console.log('fileName -> ', response.fileName);
       
     }
   
@@ -112,26 +73,7 @@ const ModalScreen = ({navigation}) => {
     console.log('result',result)
     }
   
-      // if (response.didCancel) {
-      //   alert('User cancelled camera picker');
-      //   return;
-      // } else if (response.errorCode == 'camera_unavailable') {
-      //   alert('Camera not available on device');
-      //   return;
-      // } else if (response.errorCode == 'permission') {
-      //   alert('Permission not satisfied');
-      //   return;
-      // } else if (response.errorCode == 'others') {
-      //   alert(response.errorMessage);
-      //   return;
-      // }
-      // console.log('base64 -> ', response.base64);
-      // console.log('uri -> ', response.uri);
-      // console.log('width -> ', response.width);
-      // console.log('height -> ', response.height);
-      // console.log('fileSize -> ', response.fileSize);
-      // console.log('type -> ', response.type);
-      // console.log('fileName -> ', response.fileName);
+   
     
 
 
