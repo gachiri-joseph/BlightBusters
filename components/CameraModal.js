@@ -104,7 +104,7 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
             },
           ]);
 
-          console.log('Failed to predict', label);
+          // console.log('Failed to predict', label);
         }
       } catch (err) {
         console.log(err);
@@ -146,12 +146,11 @@ const CameraModal = ({isVisible, onClose, navigation}) => {
     try {
       await ImagePicker.launchCamera(options, response => {
         if (response.didCancel) {
-          console.log('User cancelled image picker');
+
         } else if (response.error) {
           console.log('ImagePicker Error: ', response.error);
         } else {
           const uri = response?.assets[0]?.uri;
-          console.log('uri', uri);
           const path = Platform.OS !== 'ios' ? uri : 'file://' + uri;
           getResult(path, response);
         }
